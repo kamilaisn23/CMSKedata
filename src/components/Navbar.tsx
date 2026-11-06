@@ -9,8 +9,10 @@ import {
   LogOut,
   ExternalLink,
   BookOpen,
+  Menu,
 } from 'lucide-react';
 import { useToast } from './Toast';
+import { KedataMark } from './KedataMark';
 
 export interface Site {
   id: string;
@@ -32,6 +34,8 @@ interface NavbarProps {
   onLogout: () => void;
   isDark: boolean;
   onToggleDark: () => void;
+  sidebarOpen: boolean;
+  onToggleSidebar: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -42,6 +46,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLogout,
   isDark,
   onToggleDark,
+  sidebarOpen,
+  onToggleSidebar,
 }) => {
   const [copied, setCopied] = useState(false);
   const { showToast } = useToast();
@@ -56,18 +62,21 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="h-16 border-b border-slate-200 dark:border-[#3E4651] bg-[#FFFFFF] dark:bg-[#1E2328] px-4 md:px-6 flex items-center justify-between sticky top-0 z-40 transition-colors">
+    <header className="cms-navbar h-16 border-b border-slate-200 dark:border-[#3E4651] bg-[#FFFFFF] dark:bg-[#1E2328] px-4 md:px-6 flex items-center justify-between sticky top-0 z-40 transition-colors">
       {/* Left: Brand + Active Site Selector */}
       <div className="flex items-center gap-4">
+        <button id="cms-sidebar-toggle" className="cms-sidebar-toggle" onClick={onToggleSidebar} aria-expanded={sidebarOpen} aria-controls="cms-sidebar" aria-label={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'} title={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}>
+          <Menu size={20}/>
+        </button>
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-[#6C7A89] text-white flex items-center justify-center font-bold text-lg shadow-xs">
-            K
-          </div>
+          <button onClick={onToggleSidebar} aria-label="Buka atau tutup navigasi Kedata" aria-expanded={sidebarOpen} aria-controls="cms-sidebar" className="cms-logo-toggle w-10 h-10 flex items-center justify-center">
+            <KedataMark />
+          </button>
           <div className="hidden sm:block">
-            <div className="font-extrabold text-sm tracking-tight text-[#4F5A66] dark:text-[#DFE2DC] uppercase">
-              Kedata <span className="text-[#6C7A89]">CMS</span>
+            <div className="font-semibold text-lg tracking-tight text-[#293B48] dark:text-[#DFE2DC]">
+              kedata <span className="text-[#6C7A89] font-normal">cms</span>
             </div>
-            <div className="text-[10px] text-slate-500 tracking-wider">HEADLESS MULTI-SITE</div>
+            <div className="text-xs text-slate-500">Content workspace</div>
           </div>
         </div>
 
@@ -77,6 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center gap-2">
           <Globe className="w-4 h-4 text-[#6C7A89] hidden md:block" />
           <select
+            aria-label="Situs aktif"
             value={activeSite?.id || ''}
             onChange={(e) => {
               const selected = sites.find((s) => s.id === e.target.value);

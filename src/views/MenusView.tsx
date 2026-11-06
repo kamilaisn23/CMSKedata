@@ -157,13 +157,13 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
   };
 
   return (
-    <div className="p-6 flex flex-col gap-6">
+    <div className="cms-page p-6 flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">
+          <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
             Menu Navigasi
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-[13px] text-slate-500">
             Atur struktur tautan header, footer, dan bilah samping untuk situs {activeSite?.name}
           </p>
         </div>
@@ -171,7 +171,7 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
         <button
           onClick={handleSaveMenu}
           disabled={saving}
-          className="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           <span>{saving ? 'Menyimpan...' : 'Simpan Perubahan Menu'}</span>
@@ -179,7 +179,7 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
       </div>
 
       {/* Location Selectors */}
-      <div className="flex border-b border-slate-200 dark:border-[#3E4651] gap-6 text-sm font-bold">
+      <div className="flex border-b border-slate-200 dark:border-[#3E4651] gap-6 text-sm font-medium">
         {(['HEADER', 'FOOTER', 'SIDEBAR'] as const).map((loc) => (
           <button
             key={loc}
@@ -198,44 +198,44 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Menu Items Ordering List */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+        <div className="lg:col-span-2 bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
           <div className="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
             <div>
-              <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100">
+              <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100">
                 Susunan Menu {activeLocation}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-[13px] text-slate-500">
                 Gunakan tombol naik/turun untuk mengatur urutan tampilan
               </p>
             </div>
-            <span className="text-xs font-bold text-[#6C7A89]">
+            <span className="text-[13px] font-medium text-[#6C7A89]">
               {items.length} Item Tautan
             </span>
           </div>
 
           <div className="flex flex-col gap-2">
             {items.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 text-xs">
+              <div className="text-center py-12 text-slate-500 text-[13px]">
                 Belum ada tautan di menu ini. Tambahkan item di bilah samping kanan.
               </div>
             ) : (
               items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-[#3E4651] bg-slate-50 dark:bg-[#282E35] transition"
+                  className="flex items-center justify-between p-3 rounded-lg border border-slate-200 dark:border-[#3E4651] bg-slate-50 dark:bg-[#282E35] transition"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-slate-100 dark:bg-[#1E2328] text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs">
+                    <span className="w-6 h-6 rounded-full bg-slate-100 dark:bg-[#1E2328] text-slate-600 dark:text-slate-300 flex items-center justify-center font-medium text-[13px]">
                       {index + 1}
                     </span>
                     <div>
-                      <div className="font-bold text-xs text-slate-800 dark:text-slate-100">
+                      <div className="font-medium text-[13px] text-slate-800 dark:text-slate-100">
                         {item.label}
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono flex items-center gap-1">
+                      <div className="text-[13px] text-slate-500 font-mono flex items-center gap-1">
                         <span>{item.url}</span>
                         {item.target === '_blank' && (
-                          <span className="text-[10px] text-[#6C7A89]">(tab baru)</span>
+                          <span className="text-[13px] text-[#6C7A89]">(tab baru)</span>
                         )}
                       </div>
                     </div>
@@ -263,7 +263,7 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                     <button
                       type="button"
                       onClick={() => handleRemoveItem(item.id)}
-                      className="p-1 text-slate-400 hover:text-rose-600 rounded ml-2"
+                      className="p-1 text-slate-500 hover:text-rose-600 rounded ml-2"
                       title="Hapus Item"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -276,49 +276,49 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
         </div>
 
         {/* Add Item Form */}
-        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col gap-4">
-          <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
+          <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
             <Plus className="w-4 h-4 text-[#6C7A89]" />
             <span>Tambah Item Tautan</span>
           </h3>
 
           <form onSubmit={handleAddItem} className="flex flex-col gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-menusview-1" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Label Teks
               </label>
-              <input
+              <input id="cms-menusview-1"
                 type="text"
                 required
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
                 placeholder="mis. Beranda, Tentang Kami"
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-menusview-2" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 URL / Tautan
               </label>
-              <input
+              <input id="cms-menusview-2"
                 type="text"
                 required
                 value={newUrl}
                 onChange={(e) => setNewUrl(e.target.value)}
                 placeholder="mis. /about atau https://..."
-                className="w-full px-3 py-2 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-menusview-3" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Target Jendela
               </label>
-              <select
+              <select id="cms-menusview-3"
                 value={newTarget}
                 onChange={(e: any) => setNewTarget(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               >
                 <option value="_self">Jendela yang Sama (_self)</option>
                 <option value="_blank">Tab Baru (_blank)</option>
@@ -327,7 +327,7 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
 
             <button
               type="submit"
-              className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 text-xs font-bold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-lg transition shadow-xs cursor-pointer"
+              className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 text-[13px] font-medium text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambahkan ke Daftar</span>

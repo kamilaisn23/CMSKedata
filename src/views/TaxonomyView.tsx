@@ -131,13 +131,13 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
   };
 
   return (
-    <div className="p-6 flex flex-col gap-6">
+    <div className="cms-page p-6 flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">
+          <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
             Kategori & Tag
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-[13px] text-slate-500">
             Taksonomi pengelompokan konten untuk situs {activeSite?.name}
           </p>
         </div>
@@ -146,7 +146,7 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
           {tab === 'categories' ? (
             <button
               onClick={() => setCatModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambah Kategori</span>
@@ -154,7 +154,7 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
           ) : (
             <button
               onClick={() => setTagModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambah Tag</span>
@@ -164,7 +164,7 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-[#3E4651] gap-6 text-sm font-bold">
+      <div className="flex border-b border-slate-200 dark:border-[#3E4651] gap-6 text-sm font-medium">
         <button
           onClick={() => setTab('categories')}
           className={`pb-3 flex items-center gap-2 transition cursor-pointer ${
@@ -196,25 +196,25 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
           {categories.map((c) => (
             <div
               key={c.id}
-              className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-4 shadow-xs flex flex-col justify-between"
+              className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-4  flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between">
-                  <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100">{c.name}</h3>
-                  <span className="text-[10px] font-mono bg-slate-100 dark:bg-[#282E35] px-2 py-0.5 rounded text-slate-500">
+                  <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100">{c.name}</h3>
+                  <span className="text-[13px] font-mono bg-slate-100 dark:bg-[#282E35] px-2 py-0.5 rounded text-slate-500">
                     /{c.slug}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-2 line-clamp-2">
+                <p className="text-[13px] text-slate-500 mt-2 line-clamp-2">
                   {c.description || 'Tidak ada deskripsi.'}
                 </p>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
+              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[13px] text-slate-500">
                 <span>{c._count?.posts || 0} artikel terkait</span>
                 <button
                   onClick={() => setDeleteTarget({ id: c.id, name: c.name, type: 'cat' })}
-                  className="p-1 text-slate-400 hover:text-rose-600 rounded transition"
+                  className="p-1 text-slate-500 hover:text-rose-600 rounded transition"
                   title="Hapus Kategori"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -227,17 +227,17 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
 
       {/* Tags View */}
       {tab === 'tags' && (
-        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-6 shadow-xs flex flex-wrap gap-2.5">
+        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-6  flex flex-wrap gap-2.5">
           {tags.map((t) => (
             <div
               key={t.id}
-              className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#282E35] text-xs font-medium text-slate-700 dark:text-slate-200"
+              className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#282E35] text-[13px] font-medium text-slate-700 dark:text-slate-200"
             >
               <span>#{t.name}</span>
-              <span className="text-[10px] text-slate-400 font-mono">({t._count?.posts || 0})</span>
+              <span className="text-[13px] text-slate-500 font-mono">({t._count?.posts || 0})</span>
               <button
                 onClick={() => setDeleteTarget({ id: t.id, name: t.name, type: 'tag' })}
-                className="text-slate-400 hover:text-rose-600 p-0.5"
+                className="text-slate-500 hover:text-rose-600 p-0.5"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -248,23 +248,23 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
 
       {/* Category Create Modal */}
       {catModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+        <div className="fixed inset-0 z-80 flex items-center justify-center p-4 bg-black/50">
           <form
             onSubmit={handleCreateCategory}
-            className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in"
+            className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in"
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-base text-slate-800 dark:text-slate-100">Tambah Kategori Baru</h3>
+              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">Tambah Kategori Baru</h3>
               <button type="button" onClick={() => setCatModalOpen(false)}>
-                <X className="w-5 h-5 text-slate-400" />
+                <X className="w-5 h-5 text-slate-500" />
               </button>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-taxonomyview-1" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Nama Kategori
               </label>
-              <input
+              <input id="cms-taxonomyview-1"
                 type="text"
                 required
                 value={catName}
@@ -273,34 +273,34 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
                   setCatSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'));
                 }}
                 placeholder="mis. Panduan & Tutorial"
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-taxonomyview-2" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Slug
               </label>
-              <input
+              <input id="cms-taxonomyview-2"
                 type="text"
                 required
                 value={catSlug}
                 onChange={(e) => setCatSlug(e.target.value)}
                 placeholder="panduan-tutorial"
-                className="w-full px-3 py-2 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-taxonomyview-3" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Deskripsi
               </label>
-              <textarea
+              <textarea id="cms-taxonomyview-3"
                 rows={2}
                 value={catDesc}
                 onChange={(e) => setCatDesc(e.target.value)}
                 placeholder="Keterangan singkat kategori..."
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
@@ -308,13 +308,13 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
               <button
                 type="button"
                 onClick={() => setCatModalOpen(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
+                className="px-4 py-2 text-[13px] font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-xs font-semibold text-white bg-[#6C7A89] rounded-lg hover:bg-[#5a6775]"
+                className="px-4 py-2 text-[13px] font-semibold text-white bg-[#6C7A89] rounded-lg hover:bg-[#5a6775]"
               >
                 Simpan
               </button>
@@ -325,23 +325,23 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
 
       {/* Tag Create Modal */}
       {tagModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+        <div className="fixed inset-0 z-80 flex items-center justify-center p-4 bg-black/50">
           <form
             onSubmit={handleCreateTag}
-            className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in"
+            className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in"
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-base text-slate-800 dark:text-slate-100">Tambah Tag Baru</h3>
+              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">Tambah Tag Baru</h3>
               <button type="button" onClick={() => setTagModalOpen(false)}>
-                <X className="w-5 h-5 text-slate-400" />
+                <X className="w-5 h-5 text-slate-500" />
               </button>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-taxonomyview-4" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Nama Tag
               </label>
-              <input
+              <input id="cms-taxonomyview-4"
                 type="text"
                 required
                 value={tagName}
@@ -350,21 +350,21 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
                   setTagSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'));
                 }}
                 placeholder="mis. typescript"
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-taxonomyview-5" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Slug
               </label>
-              <input
+              <input id="cms-taxonomyview-5"
                 type="text"
                 required
                 value={tagSlug}
                 onChange={(e) => setTagSlug(e.target.value)}
                 placeholder="typescript"
-                className="w-full px-3 py-2 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
@@ -372,13 +372,13 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
               <button
                 type="button"
                 onClick={() => setTagModalOpen(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
+                className="px-4 py-2 text-[13px] font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-xs font-semibold text-white bg-[#6C7A89] rounded-lg hover:bg-[#5a6775]"
+                className="px-4 py-2 text-[13px] font-semibold text-white bg-[#6C7A89] rounded-lg hover:bg-[#5a6775]"
               >
                 Simpan
               </button>

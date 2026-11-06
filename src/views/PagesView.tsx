@@ -187,24 +187,24 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
   });
 
   return (
-    <div className="p-6 flex flex-col gap-6">
+    <div className="cms-page p-6 flex flex-col gap-6">
       {/* View Switch: List or Editor */}
       {!isEditing ? (
         <>
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">
-                Halaman (Pages)
+              <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+                Halaman
               </h1>
-              <p className="text-xs text-slate-500">
+              <p className="text-[13px] text-slate-500">
                 Kelola halaman statis situs {activeSite?.name} (About, Kontak, Ketentuan, dll.)
               </p>
             </div>
 
             <button
               onClick={handleOpenCreate}
-              className="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambah Halaman Baru</span>
@@ -212,22 +212,22 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
           </div>
 
           {/* Filters Bar */}
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-3 flex flex-col sm:flex-row items-center gap-3">
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] cms-filter-bar rounded-lg p-3 flex flex-col sm:flex-row items-center gap-3">
             <div className="relative flex-1 w-full">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Cari berdasarkan judul atau slug..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] rounded-lg text-slate-800 dark:text-slate-100 focus:outline-hidden"
+                className="w-full pl-9 pr-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] rounded-lg text-slate-800 dark:text-slate-100 focus:outline-hidden"
               />
             </div>
 
-            <select
+            <select aria-label="Filter status"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-700 dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-hidden"
+              className="text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-700 dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-hidden"
             >
               <option value="ALL">Semua Status</option>
               <option value="PUBLISHED">Published</option>
@@ -236,11 +236,12 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
           </div>
 
           {/* Table */}
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl shadow-xs overflow-hidden">
+          <p className="cms-list-summary" aria-live="polite">{loading ? 'Memuat halaman…' : `${filteredPages.length} dari ${pages.length} halaman`}</p>
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg  overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-[13px]">
                 <thead>
-                  <tr className="bg-[#FFFFFF] dark:bg-[#282E35] border-b border-slate-200 dark:border-[#3E4651] text-slate-500 uppercase font-bold tracking-wider">
+                  <tr className="bg-[#FFFFFF] dark:bg-[#282E35] border-b border-slate-200 dark:border-[#3E4651] text-slate-500 font-medium">
                     <th className="p-3.5">Judul</th>
                     <th className="p-3.5">Slug</th>
                     <th className="p-3.5">Status</th>
@@ -251,14 +252,14 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {loading && (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-slate-400">
+                      <td colSpan={5} className="p-8 text-center text-slate-500">
                         Memuat data halaman...
                       </td>
                     </tr>
                   )}
                   {!loading && filteredPages.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-slate-400">
+                      <td colSpan={5} className="p-8 text-center text-slate-500">
                         Tidak ada halaman yang cocok dengan pencarian.
                       </td>
                     </tr>
@@ -266,24 +267,24 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                   {!loading &&
                     filteredPages.map((page) => (
                       <tr key={page.id} className="hover:bg-slate-50 dark:hover:bg-[#282E35]/50 transition">
-                        <td className="p-3.5 font-bold text-slate-800 dark:text-slate-100">
+                        <td className="p-3.5 font-medium text-slate-800 dark:text-slate-100">
                           {page.title}
                         </td>
-                        <td className="p-3.5 text-slate-500 font-mono text-[11px]">
+                        <td className="p-3.5 text-slate-500 font-mono text-[13px]">
                           /{page.slug}
                         </td>
                         <td className="p-3.5">
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                            className={`px-2 py-0.5 rounded-full text-[13px] font-medium ${
                               page.status === 'PUBLISHED'
                                 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500'
                             }`}
                           >
                             {page.status}
                           </span>
                         </td>
-                        <td className="p-3.5 text-slate-400">
+                        <td className="p-3.5 text-slate-500">
                           {new Date(page.updatedAt).toLocaleDateString()}
                         </td>
                         <td className="p-3.5 text-right">
@@ -304,7 +305,7 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                             </button>
                             <button
                               onClick={() => setDeleteTarget(page)}
-                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
+                              className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
                               title="Hapus Halaman"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -325,17 +326,17 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-[#6C7A89] transition cursor-pointer"
+              className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-600 dark:text-slate-300 hover:text-[#6C7A89] transition cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Kembali ke Daftar Halaman</span>
             </button>
 
             <div className="flex items-center gap-3">
-              <select
+              <select aria-label="Status publikasi"
                 value={status}
                 onChange={(e: any) => setStatus(e.target.value)}
-                className="text-xs font-bold bg-white dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 focus:outline-hidden"
+                className="text-[13px] font-medium bg-white dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 focus:outline-hidden"
               >
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
@@ -344,7 +345,7 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-lg transition shadow-xs disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  disabled:opacity-50 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>{saving ? 'Menyimpan...' : 'Simpan Halaman'}</span>
@@ -355,12 +356,12 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Form: Title, Slug, TipTap Content */}
             <div className="lg:col-span-2 flex flex-col gap-4">
-              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-5 shadow-xs flex flex-col gap-4">
+              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label htmlFor="cms-pagesview-1" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Judul Halaman
                   </label>
-                  <input
+                  <input id="cms-pagesview-1"
                     type="text"
                     required
                     value={title}
@@ -369,29 +370,29 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                       if (!currentId) setSlug(generateSlug(e.target.value));
                     }}
                     placeholder="mis. Tentang Kami"
-                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 font-bold focus:outline-hidden focus:ring-2 focus:ring-[#6C7A89]"
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 font-medium focus:outline-hidden focus:ring-2 focus:ring-[#6C7A89]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Slug URL
                   </label>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-slate-400">/</span>
+                    <span className="text-[13px] font-mono text-slate-500">/</span>
                     <input
                       type="text"
                       required
                       value={slug}
                       onChange={(e) => setSlug(e.target.value)}
                       placeholder="tentang-kami"
-                      className="flex-1 px-3 py-2 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                      className="flex-1 px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Konten Halaman (TipTap Rich Text)
                   </label>
                   <TipTapEditor
@@ -407,48 +408,48 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
 
             {/* Sidebar Settings: SEO & Meta */}
             <div className="flex flex-col gap-4">
-              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-5 shadow-xs flex flex-col gap-4">
-                <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
+                <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
                   <Globe className="w-4 h-4 text-[#6C7A89]" />
                   <span>Pengaturan SEO</span>
                 </h3>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-pagesview-2" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Meta Title
                   </label>
-                  <input
+                  <input id="cms-pagesview-2"
                     type="text"
                     value={metaTitle}
                     onChange={(e) => setMetaTitle(e.target.value)}
                     placeholder="Judul untuk mesin pencari"
-                    className="w-full px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-pagesview-3" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Meta Description
                   </label>
-                  <textarea
+                  <textarea id="cms-pagesview-3"
                     rows={3}
                     value={metaDescription}
                     onChange={(e) => setMetaDescription(e.target.value)}
                     placeholder="Deskripsi ringkas untuk cuplikan Google"
-                    className="w-full px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-pagesview-4" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Gambar OpenGraph (OG Image URL)
                   </label>
-                  <input
+                  <input id="cms-pagesview-4"
                     type="text"
                     value={ogImage}
                     onChange={(e) => setOgImage(e.target.value)}
                     placeholder="https://.../og-banner.jpg"
-                    className="w-full px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                   {ogImage && (
                     <img

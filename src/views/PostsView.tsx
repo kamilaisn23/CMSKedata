@@ -245,23 +245,23 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
   });
 
   return (
-    <div className="p-6 flex flex-col gap-6">
+    <div className="cms-page p-6 flex flex-col gap-6">
       {!isEditing ? (
         <>
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">
-                Artikel & Berita (Posts)
+              <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+                Artikel
               </h1>
-              <p className="text-xs text-slate-500">
+              <p className="text-[13px] text-slate-500">
                 Kelola konten blog, artikel, dan siaran pers situs {activeSite?.name}
               </p>
             </div>
 
             <button
               onClick={handleOpenCreate}
-              className="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tulis Artikel Baru</span>
@@ -269,22 +269,22 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
           </div>
 
           {/* Filters Bar */}
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-3 flex flex-col sm:flex-row items-center gap-3">
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] cms-filter-bar rounded-lg p-3 flex flex-col sm:flex-row items-center gap-3">
             <div className="relative flex-1 w-full">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Cari artikel berdasarkan judul atau ringkasan..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] rounded-lg text-slate-800 dark:text-slate-100 focus:outline-hidden"
+                className="w-full pl-9 pr-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] rounded-lg text-slate-800 dark:text-slate-100 focus:outline-hidden"
               />
             </div>
 
-            <select
+            <select aria-label="Filter kategori"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-700 dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-hidden"
+              className="text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-700 dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-hidden"
             >
               <option value="ALL">Semua Kategori</option>
               {categories.map((c) => (
@@ -294,10 +294,10 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
               ))}
             </select>
 
-            <select
+            <select aria-label="Filter status"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-700 dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-hidden"
+              className="text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-700 dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-hidden"
             >
               <option value="ALL">Semua Status</option>
               <option value="PUBLISHED">Published</option>
@@ -307,11 +307,12 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
           </div>
 
           {/* Posts Table */}
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl shadow-xs overflow-hidden">
+          <p className="cms-list-summary" aria-live="polite">{loading ? 'Memuat artikel…' : `${filteredPosts.length} dari ${posts.length} artikel`}</p>
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg  overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-[13px]">
                 <thead>
-                  <tr className="bg-[#FFFFFF] dark:bg-[#282E35] border-b border-slate-200 dark:border-[#3E4651] text-slate-500 uppercase font-bold tracking-wider">
+                  <tr className="bg-[#FFFFFF] dark:bg-[#282E35] border-b border-slate-200 dark:border-[#3E4651] text-slate-500 font-medium">
                     <th className="p-3.5">Artikel</th>
                     <th className="p-3.5">Kategori & Tag</th>
                     <th className="p-3.5">Status</th>
@@ -322,14 +323,14 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {loading && (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-slate-400">
+                      <td colSpan={5} className="p-8 text-center text-slate-500">
                         Memuat data artikel...
                       </td>
                     </tr>
                   )}
                   {!loading && filteredPosts.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-slate-400">
+                      <td colSpan={5} className="p-8 text-center text-slate-500">
                         Tidak ada artikel yang cocok dengan kriteria filter.
                       </td>
                     </tr>
@@ -346,15 +347,15 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                                 className="w-12 h-10 object-cover rounded-md border border-slate-200 shrink-0"
                               />
                             ) : (
-                              <div className="w-12 h-10 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-400 shrink-0">
+                              <div className="w-12 h-10 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center text-slate-500 shrink-0">
                                 <ImageIcon className="w-4 h-4" />
                               </div>
                             )}
                             <div>
-                              <div className="font-bold text-slate-800 dark:text-slate-100 line-clamp-1">
+                              <div className="font-medium text-slate-800 dark:text-slate-100 line-clamp-1">
                                 {post.title}
                               </div>
-                              <div className="text-[11px] text-slate-400 font-mono">
+                              <div className="text-[13px] text-slate-500 font-mono">
                                 /{post.slug}
                               </div>
                             </div>
@@ -370,7 +371,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                               {post.tags?.map((t) => (
                                 <span
                                   key={t.tag.id}
-                                  className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-500"
+                                  className="text-[13px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-500"
                                 >
                                   #{t.tag.name}
                                 </span>
@@ -381,19 +382,19 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
 
                         <td className="p-3.5">
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                            className={`px-2 py-0.5 rounded-full text-[13px] font-medium ${
                               post.status === 'PUBLISHED'
                                 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                                 : post.status === 'SCHEDULED'
                                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500'
                             }`}
                           >
                             {post.status}
                           </span>
                         </td>
 
-                        <td className="p-3.5 text-slate-400">
+                        <td className="p-3.5 text-slate-500">
                           {post.status === 'SCHEDULED' && post.scheduledAt ? (
                             <span className="text-amber-600 dark:text-amber-400 font-medium">
                               Jadwal: {new Date(post.scheduledAt).toLocaleString()}
@@ -423,7 +424,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                             </button>
                             <button
                               onClick={() => setDeleteTarget(post)}
-                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
+                              className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
                               title="Hapus Artikel"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -444,17 +445,17 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-[#6C7A89] transition cursor-pointer"
+              className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-600 dark:text-slate-300 hover:text-[#6C7A89] transition cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Kembali ke Daftar Artikel</span>
             </button>
 
             <div className="flex items-center gap-3">
-              <select
+              <select aria-label="Status publikasi"
                 value={status}
                 onChange={(e: any) => setStatus(e.target.value)}
-                className="text-xs font-bold bg-white dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 focus:outline-hidden"
+                className="text-[13px] font-medium bg-white dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 focus:outline-hidden"
               >
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
@@ -464,7 +465,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-lg transition shadow-xs disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  disabled:opacity-50 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>{saving ? 'Menyimpan...' : 'Simpan Artikel'}</span>
@@ -475,12 +476,12 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Form */}
             <div className="lg:col-span-2 flex flex-col gap-4">
-              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-5 shadow-xs flex flex-col gap-4">
+              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label htmlFor="cms-postsview-1" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Judul Artikel
                   </label>
-                  <input
+                  <input id="cms-postsview-1"
                     type="text"
                     required
                     value={title}
@@ -489,42 +490,42 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                       if (!currentId) setSlug(generateSlug(e.target.value));
                     }}
                     placeholder="mis. Panduan Arsitektur Headless Modern"
-                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 font-bold focus:outline-hidden focus:ring-2 focus:ring-[#6C7A89]"
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 font-medium focus:outline-hidden focus:ring-2 focus:ring-[#6C7A89]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Slug URL
                   </label>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-slate-400">/</span>
+                    <span className="text-[13px] font-mono text-slate-500">/</span>
                     <input
                       type="text"
                       required
                       value={slug}
                       onChange={(e) => setSlug(e.target.value)}
                       placeholder="panduan-arsitektur-headless"
-                      className="flex-1 px-3 py-2 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                      className="flex-1 px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label htmlFor="cms-postsview-2" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Ringkasan Singkat (Excerpt)
                   </label>
-                  <textarea
+                  <textarea id="cms-postsview-2"
                     rows={2}
                     value={excerpt}
                     onChange={(e) => setExcerpt(e.target.value)}
                     placeholder="Ringkasan 1-2 kalimat untuk kartu artikel dan cuplikan feed..."
-                    className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     Isi Artikel (TipTap Rich Text)
                   </label>
                   <TipTapEditor
@@ -542,8 +543,8 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
             <div className="flex flex-col gap-4">
               {/* Publishing Schedule */}
               {status === 'SCHEDULED' && (
-                <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-xl p-4 shadow-xs flex flex-col gap-2">
-                  <label className="text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
+                <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-lg p-4  flex flex-col gap-2">
+                  <label className="text-[13px] font-medium text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
                     <Calendar className="w-4 h-4 text-amber-600" />
                     <span>Jadwal Waktu Terbit</span>
                   </label>
@@ -552,29 +553,29 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                     required
                     value={scheduledAt}
                     onChange={(e) => setScheduledAt(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-[#282E35] border border-amber-300 dark:border-amber-800 rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-white dark:bg-[#282E35] border border-amber-300 dark:border-amber-800 rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
-                  <p className="text-[11px] text-amber-700 dark:text-amber-400">
+                  <p className="text-[13px] text-amber-700 dark:text-amber-400">
                     Artikel akan otomatis berstatus Published ketika waktu ini tercapai.
                   </p>
                 </div>
               )}
 
               {/* Taxonomy */}
-              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-5 shadow-xs flex flex-col gap-4">
-                <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
+                <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
                   <Folder className="w-4 h-4 text-[#6C7A89]" />
                   <span>Kategori & Tag</span>
                 </h3>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-postsview-3" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Kategori
                   </label>
-                  <select
+                  <select id="cms-postsview-3"
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-2 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   >
                     <option value="">-- Pilih Kategori --</option>
                     {categories.map((c) => (
@@ -586,12 +587,12 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
+                  <label className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1.5">
                     Tags
                   </label>
                   <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1.5 border border-slate-200 dark:border-[#3E4651] rounded-lg bg-slate-50 dark:bg-[#282E35]">
                     {availableTags.length === 0 && (
-                      <span className="text-[11px] text-slate-400">Belum ada tag pada situs ini.</span>
+                      <span className="text-[13px] text-slate-500">Belum ada tag pada situs ini.</span>
                     )}
                     {availableTags.map((tag) => {
                       const isSelected = selectedTagIds.includes(tag.id);
@@ -600,7 +601,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                           type="button"
                           key={tag.id}
                           onClick={() => handleToggleTag(tag.id)}
-                          className={`text-xs px-2 py-1 rounded-md font-medium transition cursor-pointer ${
+                          className={`text-[13px] px-2 py-1 rounded-md font-medium transition cursor-pointer ${
                             isSelected
                               ? 'bg-[#6C7A89] text-white'
                               : 'bg-white dark:bg-[#1E2328] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'
@@ -614,15 +615,15 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-postsview-4" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Gambar Utama (Featured Image URL)
                   </label>
-                  <input
+                  <input id="cms-postsview-4"
                     type="text"
                     value={featuredImage}
                     onChange={(e) => setFeaturedImage(e.target.value)}
                     placeholder="https://.../featured.jpg"
-                    className="w-full px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                   {featuredImage && (
                     <img
@@ -635,35 +636,35 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
               </div>
 
               {/* SEO */}
-              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-5 shadow-xs flex flex-col gap-4">
-                <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
+                <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
                   <Globe className="w-4 h-4 text-[#6C7A89]" />
                   <span>Pengaturan SEO</span>
                 </h3>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-postsview-5" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Meta Title
                   </label>
-                  <input
+                  <input id="cms-postsview-5"
                     type="text"
                     value={metaTitle}
                     onChange={(e) => setMetaTitle(e.target.value)}
                     placeholder="Judul SEO..."
-                    className="w-full px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="cms-postsview-6" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
                     Meta Description
                   </label>
-                  <textarea
+                  <textarea id="cms-postsview-6"
                     rows={2}
                     value={metaDescription}
                     onChange={(e) => setMetaDescription(e.target.value)}
                     placeholder="Deskripsi SEO..."
-                    className="w-full px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
+                    className="w-full px-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100 focus:outline-hidden"
                   />
                 </div>
               </div>

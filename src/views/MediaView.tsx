@@ -160,14 +160,14 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
   );
 
   return (
-    <div className="p-6 flex flex-col gap-6">
+    <div className="cms-page p-6 flex flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">
+          <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
             Media Library
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-[13px] text-slate-500">
             Unggah dan kelola gambar dan dokumen digital (JPG, PNG, WEBP, PDF - Maks 5MB)
           </p>
         </div>
@@ -183,7 +183,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer disabled:opacity-50"
           >
             <UploadCloud className="w-4 h-4" />
             <span>{uploading ? 'Mengunggah...' : 'Unggah Berkas Baru'}</span>
@@ -192,28 +192,29 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl p-3">
+      <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] cms-filter-bar rounded-lg p-3">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari media berdasarkan nama atau deskripsi..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] rounded-lg text-slate-800 dark:text-slate-100 focus:outline-hidden"
+            className="w-full pl-9 pr-3 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] rounded-lg text-slate-800 dark:text-slate-100 focus:outline-hidden"
           />
         </div>
       </div>
 
       {/* Media Grid */}
+      <p className="cms-list-summary" aria-live="polite">{loading ? 'Memuat media…' : `${filteredMedia.length} dari ${mediaList.length} berkas`}</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {loading && (
-          <div className="col-span-full text-center py-12 text-slate-400 text-xs">
+          <div className="col-span-full text-center py-12 text-slate-500 text-[13px]">
             Memuat pustaka berkas...
           </div>
         )}
         {!loading && filteredMedia.length === 0 && (
-          <div className="col-span-full text-center py-12 text-slate-400 text-xs">
+          <div className="col-span-full text-center py-12 text-slate-500 text-[13px]">
             Belum ada berkas media diunggah. Klik tombol "Unggah Berkas Baru" di atas.
           </div>
         )}
@@ -231,7 +232,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                   setEditAlt(media.altText || '');
                   setEditCaption(media.caption || '');
                 }}
-                className={`group relative bg-white dark:bg-[#1E2328] border rounded-xl overflow-hidden shadow-xs hover:border-[#6C7A89] transition cursor-pointer flex flex-col ${
+                className={`group relative bg-white dark:bg-[#1E2328] border rounded-lg overflow-hidden  hover:border-[#6C7A89] transition cursor-pointer flex flex-col ${
                   isSelected ? 'ring-2 ring-[#6C7A89] border-transparent' : 'border-slate-200 dark:border-[#3E4651]'
                 }`}
               >
@@ -246,10 +247,10 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                   ) : isPdf ? (
                     <div className="flex flex-col items-center gap-1 text-rose-500">
                       <FileText className="w-10 h-10" />
-                      <span className="text-[10px] font-bold">PDF DOCUMENT</span>
+                      <span className="text-[13px] font-medium">PDF DOCUMENT</span>
                     </div>
                   ) : (
-                    <File className="w-8 h-8 text-slate-400" />
+                    <File className="w-8 h-8 text-slate-500" />
                   )}
 
                   {/* Quick Action Overlay */}
@@ -260,7 +261,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                         e.stopPropagation();
                         handleCopyUrl(media.url, media.id);
                       }}
-                      className="p-1.5 bg-white/90 hover:bg-white text-slate-700 rounded-md shadow-xs"
+                      className="p-1.5 bg-white/90 hover:bg-white text-slate-700 rounded-md "
                       title="Salin URL"
                     >
                       {copiedId === media.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -271,7 +272,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                         e.stopPropagation();
                         setDeleteTarget(media);
                       }}
-                      className="p-1.5 bg-white/90 hover:bg-white text-rose-600 rounded-md shadow-xs"
+                      className="p-1.5 bg-white/90 hover:bg-white text-rose-600 rounded-md "
                       title="Hapus"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -281,10 +282,10 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
 
                 {/* Media Info */}
                 <div className="p-2.5 flex flex-col gap-0.5">
-                  <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate" title={media.originalName}>
+                  <div className="text-[13px] font-semibold text-slate-800 dark:text-slate-200 truncate" title={media.originalName}>
                     {media.originalName}
                   </div>
-                  <div className="flex items-center justify-between text-[10px] text-slate-400">
+                  <div className="flex items-center justify-between text-[13px] text-slate-500">
                     <span>{formatBytes(media.sizeBytes)}</span>
                     <span className="uppercase">{media.mimeType.split('/')[1]}</span>
                   </div>
@@ -296,19 +297,19 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
 
       {/* Media Details / Edit Inspector Modal */}
       {selectedMedia && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in">
+        <div className="fixed inset-0 z-80 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg max-w-2xl w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in">
             <div className="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
-              <h3 className="font-bold text-base text-slate-800 dark:text-slate-100">
+              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">
                 Detail Berkas Media
               </h3>
               <button onClick={() => setSelectedMedia(null)}>
-                <X className="w-5 h-5 text-slate-400" />
+                <X className="w-5 h-5 text-slate-500" />
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col items-center justify-center bg-slate-50 dark:bg-[#282E35] rounded-xl p-4 border border-slate-200 dark:border-[#3E4651]">
+              <div className="flex flex-col items-center justify-center bg-slate-50 dark:bg-[#282E35] rounded-lg p-4 border border-slate-200 dark:border-[#3E4651]">
                 {selectedMedia.mimeType.startsWith('image/') ? (
                   <img
                     src={selectedMedia.url}
@@ -318,7 +319,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-rose-500 py-10">
                     <FileText className="w-16 h-16" />
-                    <span className="font-bold text-xs">{selectedMedia.originalName}</span>
+                    <span className="font-medium text-[13px]">{selectedMedia.originalName}</span>
                   </div>
                 )}
 
@@ -326,7 +327,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                   href={selectedMedia.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-3 text-xs text-[#6C7A89] flex items-center gap-1 hover:underline"
+                  className="mt-3 text-[13px] text-[#6C7A89] flex items-center gap-1 hover:underline"
                 >
                   <span>Buka di tab baru</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -335,25 +336,25 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
 
               <div className="flex flex-col gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase">
+                  <label className="block text-[13px] font-medium text-slate-500">
                     Nama Asli
                   </label>
-                  <p className="text-xs text-slate-800 dark:text-slate-200 font-mono break-all mt-0.5">
+                  <p className="text-[13px] text-slate-800 dark:text-slate-200 font-mono break-all mt-0.5">
                     {selectedMedia.originalName}
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase">
+                  <label className="block text-[13px] font-medium text-slate-500">
                     Nama Tersimpan
                   </label>
-                  <p className="text-xs text-slate-500 font-mono break-all mt-0.5">
+                  <p className="text-[13px] text-slate-500 font-mono break-all mt-0.5">
                     {selectedMedia.filename}
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase">
+                  <label className="block text-[13px] font-medium text-slate-500">
                     URL Publik
                   </label>
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -361,12 +362,12 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                       type="text"
                       readOnly
                       value={selectedMedia.url}
-                      className="flex-1 px-2.5 py-1 text-xs bg-slate-100 dark:bg-[#282E35] rounded border border-slate-300 font-mono text-slate-700 dark:text-slate-300"
+                      className="flex-1 px-2.5 py-1 text-[13px] bg-slate-100 dark:bg-[#282E35] rounded border border-slate-300 font-mono text-slate-700 dark:text-slate-300"
                     />
                     <button
                       type="button"
                       onClick={() => handleCopyUrl(selectedMedia.url, selectedMedia.id)}
-                      className="px-2.5 py-1 text-xs bg-[#6C7A89] text-white rounded hover:bg-[#5a6775]"
+                      className="px-2.5 py-1 text-[13px] bg-[#6C7A89] text-white rounded hover:bg-[#5a6775]"
                     >
                       Salin
                     </button>
@@ -374,28 +375,28 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label htmlFor="cms-mediaview-1" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Alt Text (Aksesibilitas & SEO)
                   </label>
-                  <input
+                  <input id="cms-mediaview-1"
                     type="text"
                     value={editAlt}
                     onChange={(e) => setEditAlt(e.target.value)}
                     placeholder="Deskripsi gambar..."
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                    className="w-full px-2.5 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label htmlFor="cms-mediaview-2" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Caption
                   </label>
-                  <input
+                  <input id="cms-mediaview-2"
                     type="text"
                     value={editCaption}
                     onChange={(e) => setEditCaption(e.target.value)}
                     placeholder="Keterangan teks..."
-                    className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                    className="w-full px-2.5 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                   />
                 </div>
               </div>
@@ -405,7 +406,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
               <button
                 type="button"
                 onClick={() => setDeleteTarget(selectedMedia)}
-                className="text-xs text-rose-600 hover:text-rose-700 flex items-center gap-1 font-semibold"
+                className="text-[13px] text-rose-600 hover:text-rose-700 flex items-center gap-1 font-semibold"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Hapus Berkas Ini</span>
@@ -415,14 +416,14 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                 <button
                   type="button"
                   onClick={() => setSelectedMedia(null)}
-                  className="px-3.5 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
+                  className="px-3.5 py-1.5 text-[13px] font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
                 >
                   Tutup
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveMetadata}
-                  className="px-4 py-1.5 text-xs font-semibold text-white bg-[#6C7A89] rounded-lg hover:bg-[#5a6775]"
+                  className="px-4 py-1.5 text-[13px] font-semibold text-white bg-[#6C7A89] rounded-lg hover:bg-[#5a6775]"
                 >
                   Simpan Perubahan
                 </button>

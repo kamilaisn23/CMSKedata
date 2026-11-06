@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { KedataMark } from '../components/KedataMark';
 import { Lock, Mail, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 interface LoginViewProps {
@@ -38,12 +39,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-[#171B1F]">
-      <div className="max-w-md w-full bg-white dark:bg-[#1E2328] rounded-2xl shadow-xl border border-[#DFE2DC] dark:border-[#3E4651] p-8 animate-in fade-in zoom-in-95">
+    <div className="cms-login min-h-screen flex items-center justify-center p-4 bg-white dark:bg-[#171B1F]">
+      <div className="max-w-md w-full bg-white dark:bg-[#1E2328] rounded-xl border border-slate-200 dark:border-[#3E4651] p-8">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#6C7A89] text-white flex items-center justify-center font-black text-2xl shadow-md mb-3">
-            K
+          <div className="mb-3">
+            <KedataMark className="h-16 w-16" />
           </div>
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
             Kedata <span className="text-[#6C7A89]">CMS</span>
@@ -62,12 +63,14 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="login-email" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
               Email Administrator
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               <input
+                id="login-email"
+                autoComplete="username"
                 type="email"
                 required
                 value={email}
@@ -79,12 +82,14 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="login-password" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
               Password
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               <input
+                id="login-password"
+                autoComplete="current-password"
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
@@ -94,6 +99,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               />
               <button
                 type="button"
+                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600"
               >
@@ -105,7 +111,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-md disabled:opacity-50 cursor-pointer"
+            className="mt-2 w-full flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition  disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <span>Memverifikasi...</span>

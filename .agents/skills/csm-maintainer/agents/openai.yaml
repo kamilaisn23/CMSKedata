@@ -1,0 +1,4 @@
+interface:
+  display_name: "CSM Maintainer"
+  short_description: "Perbaiki Kedata CMS dengan alur Kedata Vibeskills"
+  default_prompt: "Gunakan $csm-maintainer untuk menelusuri dan memperbaiki bug CSM, lalu verifikasi hasilnya."

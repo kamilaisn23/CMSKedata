@@ -27,13 +27,15 @@ export type NavTab =
 interface SidebarProps {
   currentTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
+  open: boolean;
+  onClose: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, open, onClose }) => {
   const menuItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: 'pages', label: 'Halaman (Pages)', icon: <FileText className="w-4 h-4" /> },
-    { id: 'posts', label: 'Artikel (Posts)', icon: <Newspaper className="w-4 h-4" /> },
+    { id: 'pages', label: 'Halaman', icon: <FileText className="w-4 h-4" /> },
+    { id: 'posts', label: 'Artikel', icon: <Newspaper className="w-4 h-4" /> },
     { id: 'taxonomy', label: 'Kategori & Tag', icon: <Tags className="w-4 h-4" /> },
     { id: 'media', label: 'Media Library', icon: <ImageIcon className="w-4 h-4" /> },
     { id: 'menus', label: 'Menu Navigasi', icon: <MenuIcon className="w-4 h-4" /> },
@@ -44,26 +46,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
   ];
 
   return (
-    <aside className="w-64 border-r border-slate-200 dark:border-[#3E4651] bg-[#FFFFFF] dark:bg-[#1A1E22] flex flex-col p-4 shrink-0 transition-colors">
-      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
+    <aside id="cms-sidebar" aria-hidden={!open} inert={!open} data-open={open} onMouseLeave={onClose} className="cms-sidebar w-64 border-r border-slate-200 dark:border-[#3E4651] bg-[#FFFFFF] dark:bg-[#1A1E22] flex flex-col p-4 shrink-0 transition-colors" onKeyDown={(event) => { if (event.key === 'Escape') onClose(); }}>
+      <div className="text-xs font-medium text-slate-500 px-3 mb-3">
         Manajemen Konten
       </div>
 
-      <nav className="flex flex-col gap-1">
+      <nav id="cms-navigation" aria-label="Navigasi utama" className="flex flex-col gap-1">
         {menuItems.map((item) => {
           const isActive = currentTab === item.id;
           return (
+            <React.Fragment key={item.id}>
+            {(item.id === 'pages' || item.id === 'settings') && <div className="cms-nav-group">{item.id === 'pages' ? 'Konten situs' : 'Workspace'}</div>}
             <button
               key={item.id}
+              aria-current={isActive ? 'page' : undefined}
               onClick={() => onSelectTab(item.id)}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs md:text-sm font-semibold transition ${
                 isActive
-                  ? 'bg-[#6C7A89] text-white shadow-xs'
+                  ? 'bg-slate-100 text-slate-900 dark:bg-[#282E35] dark:text-white'
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100/60 dark:hover:bg-[#282E35]'
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className={isActive ? 'text-white' : 'text-[#6C7A89] dark:text-[#8E9BA9]'}>
+                <span className="text-slate-500 dark:text-slate-400">
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
@@ -76,6 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
                 </span>
               )}
             </button>
+            </React.Fragment>
           );
         })}
       </nav>

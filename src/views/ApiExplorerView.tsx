@@ -205,15 +205,15 @@ for (const post of posts) {
   };
 
   return (
-    <div className="p-6 flex flex-col gap-6">
+    <div className="cms-page p-6 flex flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
             <Terminal className="w-6 h-6 text-[#6C7A89]" />
             <span>API Playground & SDK Integrasi</span>
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-[13px] text-slate-500">
             Uji endpoint REST API publik langsung dari dasbor dan salin kode integrasi untuk Next.js, Vue, Nuxt, HTML, atau cURL
           </p>
         </div>
@@ -222,32 +222,32 @@ for (const post of posts) {
           href="/docs"
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-xl hover:text-[#6C7A89] transition shadow-xs"
+          className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg hover:text-[#6C7A89] transition "
         >
           <Code2 className="w-4 h-4 text-[#6C7A89]" />
           <span>Buka OpenAPI Interactive Docs</span>
-          <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+          <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
         </a>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column: Request Builder */}
         <div className="flex flex-col gap-4">
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col gap-4">
-            <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
+            <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100 flex items-center gap-2">
               <Zap className="w-4 h-4 text-[#6C7A89]" />
               <span>Konfigurasi Permintaan (Request)</span>
             </h3>
 
             {/* Endpoint Selector */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="cms-apiexplorerview-1" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Pilih Endpoint
               </label>
-              <select
+              <select id="cms-apiexplorerview-1"
                 value={selectedEndpoint}
                 onChange={(e) => setSelectedEndpoint(e.target.value)}
-                className="w-full px-3 py-2 text-xs font-mono font-bold bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] font-mono font-medium bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               >
                 <option value="/posts">GET /posts (Daftar Artikel)</option>
                 <option value="/posts/:slug">GET /posts/:slug (Detail Artikel)</option>
@@ -263,15 +263,15 @@ for (const post of posts) {
             {/* Slug parameter if applicable */}
             {selectedEndpoint.includes(':slug') && (
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="cms-apiexplorerview-2" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Parameter Slug (:slug)
                 </label>
-                <input
+                <input id="cms-apiexplorerview-2"
                   type="text"
                   value={slugParam}
                   onChange={(e) => setSlugParam(e.target.value)}
                   placeholder="mis. building-headless-cms"
-                  className="w-full px-3 py-1.5 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-1.5 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
             )}
@@ -279,60 +279,60 @@ for (const post of posts) {
             {/* Query parameters */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="cms-apiexplorerview-3" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Field Selection (?fields=)
                 </label>
-                <input
+                <input id="cms-apiexplorerview-3"
                   type="text"
                   value={fieldsParam}
                   onChange={(e) => setFieldsParam(e.target.value)}
                   placeholder="title,slug,publishedAt"
-                  className="w-full px-2.5 py-1.5 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                  className="w-full px-2.5 py-1.5 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="cms-apiexplorerview-4" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Relasi (?include=)
                 </label>
-                <input
+                <input id="cms-apiexplorerview-4"
                   type="text"
                   value={includeParam}
                   onChange={(e) => setIncludeParam(e.target.value)}
                   placeholder="category,tags"
-                  className="w-full px-2.5 py-1.5 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                  className="w-full px-2.5 py-1.5 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="cms-apiexplorerview-5" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Pencarian (?search=)
                 </label>
-                <input
+                <input id="cms-apiexplorerview-5"
                   type="text"
                   value={searchParam}
                   onChange={(e) => setSearchParam(e.target.value)}
                   placeholder="kata kunci..."
-                  className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                  className="w-full px-2.5 py-1.5 text-[13px] bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="cms-apiexplorerview-6" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Jumlah Per Halaman (?perPage=)
                 </label>
-                <input
+                <input id="cms-apiexplorerview-6"
                   type="number"
                   value={perPageParam}
                   onChange={(e) => setPerPageParam(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                  className="w-full px-2.5 py-1.5 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
             {/* API Key Header */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Header x-api-key (Situs: {activeSite?.name})
               </label>
               <input
@@ -340,7 +340,7 @@ for (const post of posts) {
                 value={customApiKey}
                 onChange={(e) => setCustomApiKey(e.target.value)}
                 placeholder={activeSite?.apiKeyPrefix || 'Kunci API situs...'}
-                className="w-full px-3 py-2 text-xs font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
               />
             </div>
 
@@ -349,7 +349,7 @@ for (const post of posts) {
               type="button"
               onClick={handleExecuteRequest}
               disabled={loading}
-              className="mt-2 w-full flex items-center justify-center gap-2 py-2.5 text-xs font-bold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer disabled:opacity-50"
+              className="mt-2 w-full flex items-center justify-center gap-2 py-2.5 text-[13px] font-medium text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer disabled:opacity-50"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>{loading ? 'Mengirim Permintaan...' : 'Kirim Permintaan (Send Request)'}</span>
@@ -357,13 +357,13 @@ for (const post of posts) {
           </div>
 
           {/* Code Snippets Box */}
-          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col gap-3">
+          <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-3">
             <div className="flex items-center justify-between border-b pb-2 border-slate-200 dark:border-slate-800">
-              <span className="text-xs font-bold uppercase text-slate-500">Contoh Kode Klien</span>
+              <span className="text-[13px] font-medium text-slate-500">Contoh Kode Klien</span>
               <button
                 type="button"
                 onClick={handleCopySnippet}
-                className="flex items-center gap-1 text-xs text-[#6C7A89] hover:underline"
+                className="flex items-center gap-1 text-[13px] text-[#6C7A89] hover:underline"
               >
                 {copiedSnippet ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>Salin Kode</span>
@@ -371,7 +371,7 @@ for (const post of posts) {
             </div>
 
             {/* Snippet Tabs */}
-            <div className="flex flex-wrap gap-1.5 text-xs font-semibold">
+            <div className="flex flex-wrap gap-1.5 text-[13px] font-semibold">
               {(['curl', 'nextjs', 'vue', 'html', 'sdk'] as const).map((tab) => (
                 <button
                   key={tab}
@@ -396,28 +396,28 @@ for (const post of posts) {
               ))}
             </div>
 
-            <pre className="p-3 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono overflow-x-auto max-h-56">
+            <pre className="p-3 bg-slate-900 text-slate-100 rounded-lg text-[13px] font-mono overflow-x-auto max-h-56">
               {getSnippet()}
             </pre>
           </div>
         </div>
 
         {/* Right Column: Live Response Viewer */}
-        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg p-5  flex flex-col gap-4">
           <div className="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
             <div>
-              <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100">
+              <h3 className="font-medium text-sm text-slate-800 dark:text-slate-100">
                 Respons HTTP Langsung (Live Response)
               </h3>
-              <p className="text-xs text-slate-400 font-mono mt-0.5 break-all">
+              <p className="text-[13px] text-slate-500 font-mono mt-0.5 break-all">
                 {finalPath}
               </p>
             </div>
 
             {responseStatus && (
-              <div className="flex items-center gap-2 text-xs font-mono">
+              <div className="flex items-center gap-2 text-[13px] font-mono">
                 <span
-                  className={`px-2 py-0.5 rounded-full font-bold ${
+                  className={`px-2 py-0.5 rounded-full font-medium ${
                     responseStatus >= 200 && responseStatus < 300
                       ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                       : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
@@ -426,7 +426,7 @@ for (const post of posts) {
                   {responseStatus}
                 </span>
                 {responseTimeMs !== null && (
-                  <span className="text-slate-400">{responseTimeMs} ms</span>
+                  <span className="text-slate-500">{responseTimeMs} ms</span>
                 )}
               </div>
             )}
@@ -434,8 +434,8 @@ for (const post of posts) {
 
           {/* Response Headers Widget */}
           {Object.keys(responseHeaders).length > 0 && (
-            <div className="p-2.5 bg-slate-50 dark:bg-[#282E35] rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] font-mono flex flex-col gap-1">
-              <div className="font-bold text-slate-500 uppercase text-[10px]">Header Terpilih:</div>
+            <div className="p-2.5 bg-slate-50 dark:bg-[#282E35] rounded-lg border border-slate-200 dark:border-slate-800 text-[13px] font-mono flex flex-col gap-1">
+              <div className="font-medium text-slate-500 text-[13px]">Header Terpilih:</div>
               <div className="text-slate-700 dark:text-slate-300">
                 <span>ETag: </span>
                 <span className="text-emerald-600 dark:text-emerald-400">{responseHeaders['etag'] || '—'}</span>
@@ -453,12 +453,12 @@ for (const post of posts) {
 
           {/* JSON Body View */}
           <div className="flex-1 flex flex-col">
-            <span className="text-xs font-bold text-slate-500 uppercase mb-2">
+            <span className="text-[13px] font-medium text-slate-500 mb-2">
               Badan Respons (JSON Data):
             </span>
-            <div className="flex-1 min-h-[360px] max-h-[550px] overflow-auto bg-slate-900 text-emerald-400 rounded-xl p-4 font-mono text-xs">
+            <div className="flex-1 min-h-[360px] max-h-[550px] overflow-auto bg-slate-900 text-emerald-400 rounded-lg p-4 font-mono text-[13px]">
               {loading ? (
-                <div className="text-slate-400 italic">Mengirim permintaan dan menunggu respons...</div>
+                <div className="text-slate-500 italic">Mengirim permintaan dan menunggu respons...</div>
               ) : responseBody ? (
                 <pre>{JSON.stringify(responseBody, null, 2)}</pre>
               ) : (

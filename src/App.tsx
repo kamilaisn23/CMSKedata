@@ -13,6 +13,7 @@ import { SettingsView } from './views/SettingsView';
 import { SitesView } from './views/SitesView';
 import { AuditLogsView } from './views/AuditLogsView';
 import { ApiExplorerView } from './views/ApiExplorerView';
+import { KedataMark } from './components/KedataMark';
 
 function AppContent() {
   const [user, setUser] = useState<{ id: string; email: string; name: string; role: string } | null>(null);
@@ -24,12 +25,10 @@ function AppContent() {
 
   // Active navigation tab
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Dark mode
-  const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem('kd_theme') === 'dark' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  const [isDark, setIsDark] = useState(false);
 
   const { showToast } = useToast();
 
@@ -101,8 +100,8 @@ function AppContent() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#171B1F] text-slate-600 dark:text-slate-300">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#6C7A89] animate-pulse flex items-center justify-center text-white font-bold text-lg">
-            K
+          <div className="animate-pulse">
+            <KedataMark />
           </div>
           <span className="text-xs font-semibold tracking-wider uppercase text-slate-500">
             Memuat Kedata CMS...
@@ -125,7 +124,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-[#171B1F] text-slate-800 dark:text-slate-100 transition-colors">
+    <div className="cms-shell min-h-screen flex flex-col bg-white dark:bg-[#171B1F] text-slate-800 dark:text-slate-100 transition-colors">
       {/* Top Navbar */}
       <Navbar
         sites={sites}
@@ -135,15 +134,19 @@ function AppContent() {
         onLogout={handleLogout}
         isDark={isDark}
         onToggleDark={() => setIsDark(!isDark)}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen(open => !open)}
       />
 
       {/* Main Container */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="cms-layout flex-1 flex overflow-hidden">
+        <div className="cms-sidebar-edge" aria-hidden="true" onMouseEnter={() => setSidebarOpen(true)} />
+        {sidebarOpen && <button className="cms-sidebar-backdrop" aria-label="Tutup menu navigasi" onClick={() => setSidebarOpen(false)} />}
         {/* Sidebar */}
-        <Sidebar currentTab={currentTab} onSelectTab={setCurrentTab} />
+        <Sidebar currentTab={currentTab} open={sidebarOpen} onClose={() => { setSidebarOpen(false); document.getElementById('cms-sidebar-toggle')?.focus(); }} onSelectTab={(tab) => { setCurrentTab(tab); if (window.innerWidth <= 1100) { setSidebarOpen(false); document.getElementById('cms-sidebar-toggle')?.focus(); } }} />
 
         {/* View Port Area */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="cms-main flex-1 overflow-y-auto">
           {currentTab === 'dashboard' && (
             <DashboardView activeSite={activeSite} onNavigate={setCurrentTab} />
           )}

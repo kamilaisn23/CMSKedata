@@ -85,218 +85,41 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavi
     }
   };
 
-  if (!activeSite) {
-    return (
-      <div className="p-8 text-center text-slate-500">
-        Pilih atau buat situs untuk melihat ringkasan dashboard.
-      </div>
-    );
-  }
 
-  return (
-    <div className="flex flex-col gap-6 p-6">
-      {/* Top Banner: Active Site Info */}
-      <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#6C7A89] dark:text-[#8E9BA9]">
-              Situs Aktif
-            </span>
-          </div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mt-1">
-            {activeSite.name}
-          </h1>
-          <p className="text-sm text-slate-500 mt-0.5 flex items-center gap-2">
-            <span>Domain: <strong className="text-slate-700 dark:text-slate-300 font-mono">{activeSite.domain}</strong></span>
-            <span>•</span>
-            <span>CORS: <code className="bg-slate-100 dark:bg-[#282E35] px-1.5 py-0.5 rounded text-xs">{activeSite.corsOrigins}</code></span>
-            <span>•</span>
-            <span>Slug: <strong className="text-slate-700 dark:text-slate-300 font-mono">{activeSite.slug}</strong></span>
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleTriggerScheduled}
-            disabled={publishing}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100/60 hover:bg-slate-100 dark:bg-[#282E35] dark:hover:bg-[#343C45] rounded-xl transition cursor-pointer"
-            title="Periksa dan terbitkan artikel terjadwal sekarang"
-          >
-            <Clock className={`w-3.5 h-3.5 text-[#6C7A89] ${publishing ? 'animate-spin' : ''}`} />
-            <span>{publishing ? 'Memproses...' : 'Cek Jadwal Terbit'}</span>
-          </button>
-
-          <button
-            onClick={() => onNavigate('api-explorer')}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-xl transition shadow-xs cursor-pointer"
-          >
-            <Radio className="w-3.5 h-3.5" />
-            <span>Uji API & SDK</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div
-          onClick={() => onNavigate('pages')}
-          className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs hover:border-[#6C7A89] transition cursor-pointer group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Halaman</span>
-            <div className="p-2 rounded-xl bg-slate-100/70 dark:bg-[#282E35] text-[#6C7A89] group-hover:scale-110 transition">
-              <FileText className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-black text-slate-800 dark:text-slate-100 mt-2">
-            {stats.pagesCount}
-          </div>
-          <div className="text-xs text-[#6C7A89] dark:text-[#8E9BA9] mt-1 flex items-center gap-1 font-medium">
-            <span>Kelola Halaman Statis</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </div>
-        </div>
-
-        <div
-          onClick={() => onNavigate('posts')}
-          className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs hover:border-[#6C7A89] transition cursor-pointer group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Artikel & Berita</span>
-            <div className="p-2 rounded-xl bg-slate-100/70 dark:bg-[#282E35] text-[#6C7A89] group-hover:scale-110 transition">
-              <Newspaper className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-black text-slate-800 dark:text-slate-100 mt-2">
-            {stats.postsCount}
-          </div>
-          <div className="text-xs text-[#6C7A89] dark:text-[#8E9BA9] mt-1 flex items-center gap-1 font-medium">
-            <span>Kelola Artikel & Jadwal</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </div>
-        </div>
-
-        <div
-          onClick={() => onNavigate('media')}
-          className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs hover:border-[#6C7A89] transition cursor-pointer group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Media Assets</span>
-            <div className="p-2 rounded-xl bg-slate-100/70 dark:bg-[#282E35] text-[#6C7A89] group-hover:scale-110 transition">
-              <ImageIcon className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-3xl font-black text-slate-800 dark:text-slate-100 mt-2">
-            {stats.mediaCount}
-          </div>
-          <div className="text-xs text-[#6C7A89] dark:text-[#8E9BA9] mt-1 flex items-center gap-1 font-medium">
-            <span>Unggah & Kelola Berkas</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </div>
-        </div>
-      </div>
-
-      {/* Two Columns: Recent Posts & Audit Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Posts Table */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="font-bold text-slate-800 dark:text-slate-100">Artikel Terbaru</h2>
-              <p className="text-xs text-slate-500">Artikel yang baru diubah atau diterbitkan</p>
-            </div>
-            <button
-              onClick={() => onNavigate('posts')}
-              className="text-xs font-semibold text-[#6C7A89] hover:underline"
-            >
-              Lihat Semua →
-            </button>
-          </div>
-
-          {recentPosts.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-xs">
-              Belum ada artikel. Klik tombol Tambah Artikel untuk membuat konten pertama.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider">
-                    <th className="pb-2 font-bold">Judul</th>
-                    <th className="pb-2 font-bold">Status</th>
-                    <th className="pb-2 font-bold">Kategori</th>
-                    <th className="pb-2 font-bold">Waktu</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {recentPosts.map((post) => (
-                    <tr key={post.id} className="hover:bg-slate-50/50 dark:hover:bg-[#282E35]/40 transition">
-                      <td className="py-2.5 font-medium text-slate-800 dark:text-slate-200 max-w-xs truncate">
-                        {post.title}
-                      </td>
-                      <td className="py-2.5">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            post.status === 'PUBLISHED'
-                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400'
-                              : post.status === 'SCHEDULED'
-                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-400'
-                              : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
-                          }`}
-                        >
-                          {post.status}
-                        </span>
-                      </td>
-                      <td className="py-2.5 text-slate-500">
-                        {post.category?.name || '—'}
-                      </td>
-                      <td className="py-2.5 text-slate-400">
-                        {new Date(post.createdAt).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* Recent Audit Activity */}
-        <div className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-2xl p-5 shadow-xs flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="font-bold text-slate-800 dark:text-slate-100">Aktivitas Audit</h2>
-              <p className="text-xs text-slate-500">Catatan perubahan terakhir</p>
-            </div>
-            <button
-              onClick={() => onNavigate('audit-logs')}
-              className="text-xs font-semibold text-[#6C7A89] hover:underline"
-            >
-              Semua →
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
-            {recentLogs.length === 0 ? (
-              <div className="text-xs text-slate-400 text-center py-8">Belum ada catatan aktivitas.</div>
-            ) : (
-              recentLogs.map((log) => (
-                <div key={log.id} className="text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-[#282E35] border border-slate-100 dark:border-slate-800 flex flex-col gap-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#6C7A89] dark:text-[#8E9BA9]">{log.action}</span>
-                    <span className="text-[10px] text-slate-400">{new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                  <div className="text-slate-700 dark:text-slate-300 font-medium line-clamp-1">
-                    {log.entityType} ({log.entityId?.slice(0, 8)}...)
-                  </div>
-                  <div className="text-[10px] text-slate-400 truncate">Oleh: {log.actor}</div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
+  if (!activeSite) return <div className="cms-overview"><h1>Dashboard</h1><p>Pilih atau buat situs untuk mulai mengelola konten.</p><button className="cms-primary" onClick={() => onNavigate('sites')}>Kelola situs</button></div>;
+  const metrics = [
+    {label:'Halaman', value:stats.pagesCount, tab:'pages' as NavTab, description:'Konten halaman situs'},
+    {label:'Artikel', value:stats.postsCount, tab:'posts' as NavTab, description:'Berita dan publikasi'},
+    {label:'Media', value:stats.mediaCount, tab:'media' as NavTab, description:'Gambar dan dokumen'},
+  ];
+  return <div className="cms-overview">
+    <div className="cms-title-row">
+      <div><h1>Dashboard</h1><p>Kelola konten <strong>{activeSite.name}</strong> dari satu tempat.</p></div>
+      <button className="cms-primary" onClick={() => onNavigate('posts')}><Plus size={16}/>Kelola artikel</button>
     </div>
-  );
+    <section className="cms-site-strip" aria-label="Situs aktif">
+      <div><Globe size={18}/><strong>{activeSite.name}</strong><span>{activeSite.domain || 'Domain belum diatur'}</span></div>
+      <button className="cms-text-button" onClick={() => onNavigate('settings')}>Pengaturan situs <ArrowUpRight size={14}/></button>
+    </section>
+    {/* Three equal columns: 3 × ((available width - 2px) / 3) + 2 dividers = available width. */}
+    <section className="cms-metrics" aria-label="Ringkasan konten">
+      {metrics.map(metric => <button key={metric.tab} onClick={() => onNavigate(metric.tab)}>
+        <span>{metric.label}<ArrowUpRight size={15}/></span><strong>{metric.value.toLocaleString('id-ID')}</strong><small>{metric.description}</small>
+      </button>)}
+    </section>
+    <div className="cms-dashboard-grid">
+      <section className="cms-panel">
+        <div className="cms-section-title"><div><h2>Artikel terbaru</h2><p>Publikasi dan konten yang sedang disiapkan.</p></div><button onClick={() => onNavigate('posts')}>Lihat semua <ArrowUpRight size={14}/></button></div>
+        {!recentPosts.length ? <div className="cms-empty"><p>Belum ada artikel di situs ini.</p><button className="cms-text-button" onClick={() => onNavigate('posts')}>Mulai kelola artikel <ArrowUpRight size={14}/></button></div> : <div className="cms-table-scroll"><table className="cms-post-table"><thead><tr><th>Judul artikel</th><th>Status</th><th>Tanggal</th></tr></thead><tbody>{recentPosts.map(post => <tr key={post.id}><td><button onClick={() => onNavigate('posts')}>{post.title}</button><small>{post.category?.name || 'Tanpa kategori'}</small></td><td><span className={'cms-status cms-status-'+post.status.toLowerCase()}>{post.status === 'PUBLISHED' ? 'Terbit' : post.status === 'SCHEDULED' ? 'Terjadwal' : 'Draf'}</span></td><td>{new Date(post.createdAt).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td></tr>)}</tbody></table></div>}
+      </section>
+      <section className="cms-panel cms-activity-panel">
+        <div className="cms-section-title"><div><h2>Aktivitas terbaru</h2><p>Perubahan pada konten situs.</p></div><button onClick={() => onNavigate('audit-logs')} aria-label="Lihat semua aktivitas"><ArrowUpRight size={16}/></button></div>
+        {!recentLogs.length ? <div className="cms-empty">Belum ada aktivitas di situs ini.</div> : <ul className="cms-activity">{recentLogs.map(log => <li key={log.id}><span className="cms-activity-dot"/><div><strong>{log.action.replaceAll('_',' ')} · {log.entityType}</strong><p>{log.actor}</p></div><time>{new Date(log.createdAt).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</time></li>)}</ul>}
+      </section>
+    </div>
+    <section className="cms-tools" aria-label="Alat publikasi">
+      <div><h2>Publikasi & integrasi</h2><p>Periksa jadwal konten atau hubungkan situs melalui API.</p></div>
+      <div><button className="cms-secondary" disabled={publishing} onClick={handleTriggerScheduled}><Clock size={16}/>{publishing ? 'Memeriksa…' : 'Cek jadwal terbit'}</button><button className="cms-secondary" onClick={() => onNavigate('api-explorer')}><Radio size={16}/>API & SDK</button></div>
+    </section>
+  </div>;
 };
