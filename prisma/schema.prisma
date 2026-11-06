@@ -1,0 +1,210 @@
+// Prisma Schema for Kedata CMS
+// Supports SQLite for fast local prototyping and easy migration to PostgreSQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         String    @default("ADMIN")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Site {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique
+  domain        String
+  description   String?
+  apiKeyHash    String       @unique
+  apiKeyPrefix  String
+  corsOrigins   String       @default("*")
+  webhookUrl    String?
+  webhookSecret String?
+  rateLimit     Int          @default(120)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  pages         Page[]
+  posts         Post[]
+  categories    Category[]
+  tags          Tag[]
+  media         Media[]
+  menus         Menu[]
+  setting       SiteSetting?
+}
+
+model SiteSetting {
+  id             String   @id @default(cuid())
+  siteId         String   @unique
+  site           Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  siteTitle      String
+  tagline        String?
+  logoUrl        String?
+  faviconUrl     String?
+  contactEmail   String?
+  contactPhone   String?
+  socialLinks    String   @default("{}")
+  footerText     String?
+  customMetadata String   @default("{}")
+  updatedAt      DateTime @updatedAt
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  siteId      String
+  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts       Post[]
+
+  @@unique([siteId, slug])
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  siteId    String
+  site      Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name      String
+  slug      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  posts     PostTag[]
+
+  @@unique([siteId, slug])
+}
+
+model Page {
+  id              String    @id @default(cuid())
+  siteId          String
+  site            Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  title           String
+  slug            String
+  contentHtml     String    @default("")
+  contentJson     String    @default("{}")
+  status          String    @default("DRAFT") // DRAFT, PUBLISHED
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([siteId, slug])
+}
+
+model Post {
+  id              String    @id @default(cuid())
+  siteId          String
+  site            Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  title           String
+  slug            String
+  excerpt         String?
+  contentHtml     String    @default("")
+  contentJson     String    @default("{}")
+  featuredImage   String?
+  status          String    @default("DRAFT") // DRAFT, PUBLISHED, SCHEDULED
+  categoryId      String?
+  category        Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  tags            PostTag[]
+
+  @@unique([siteId, slug])
+}
+
+model PostTag {
+  postId String
+  tagId  String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model ContentVersion {
+  id            String   @id @default(cuid())
+  entityType    String   // "PAGE" or "POST"
+  entityId      String
+  versionNumber Int
+  title         String
+  contentHtml   String
+  contentJson   String
+  snapshotData  String   // JSON string
+  createdBy     String?
+  createdAt     DateTime @default(now())
+
+  @@index([entityType, entityId])
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  siteId       String?
+  site         Site?    @relation(fields: [siteId], references: [id], onDelete: SetNull)
+  filename     String
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  url          String
+  altText      String?
+  caption      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Menu {
+  id        String   @id @default(cuid())
+  siteId    String
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name      String
+  location  String   @default("HEADER") // HEADER, FOOTER, SIDEBAR
+  itemsJson String   @default("[]") // Array of { id, label, url, target, children }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  siteId     String?
+  actor      String
+  action     String
+  entityType String
+  entityId   String?
+  details    String   @default("{}")
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([siteId])
+  @@index([entityType, entityId])
+}

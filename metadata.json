@@ -1,0 +1,6 @@
+{
+  "name": "Kedata CMS",
+  "description": "Headless and framework-agnostic multi-website Content Management System with REST API, TipTap editor, versioning, media library, and integration SDKs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
