@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Globe,
   Key,
   Check,
   Copy,
@@ -13,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useToast } from './Toast';
 import { KedataMark } from './KedataMark';
+import { SiteSwitcher } from './SiteSwitcher';
 
 export interface Site {
   id: string;
@@ -83,24 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="h-5 w-px bg-slate-300 dark:bg-slate-700 hidden sm:block" />
 
         {/* Site Switcher */}
-        <div className="flex items-center gap-2">
-          <Globe className="w-4 h-4 text-[#6C7A89] hidden md:block" />
-          <select
-            aria-label="Situs aktif"
-            value={activeSite?.id || ''}
-            onChange={(e) => {
-              const selected = sites.find((s) => s.id === e.target.value);
-              if (selected) onSelectSite(selected);
-            }}
-            className="text-xs md:text-sm font-semibold bg-white dark:bg-[#282E35] border border-slate-200 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-1.5 focus:outline-hidden focus:ring-2 focus:ring-[#6C7A89] cursor-pointer"
-          >
-            {sites.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} ({s.domain})
-              </option>
-            ))}
-          </select>
-        </div>
+        <SiteSwitcher sites={sites} activeSite={activeSite} onSelectSite={onSelectSite} />
       </div>
 
       {/* Right Controls */}

@@ -3,6 +3,7 @@ import { ToastProvider, useToast } from './components/Toast';
 import { Navbar, Site } from './components/Navbar';
 import { Sidebar, NavTab } from './components/Sidebar';
 import { LoginView } from './views/LoginView';
+import { LandingView } from './views/LandingView';
 import { DashboardView } from './views/DashboardView';
 import { PagesView } from './views/PagesView';
 import { PostsView } from './views/PostsView';
@@ -16,6 +17,7 @@ import { ApiExplorerView } from './views/ApiExplorerView';
 import { KedataMark } from './components/KedataMark';
 
 function AppContent() {
+  const pagePath = window.location.pathname.replace(/\/+$/, '') || '/';
   const [user, setUser] = useState<{ id: string; email: string; name: string; role: string } | null>(null);
   const [authChecking, setAuthChecking] = useState(true);
 
@@ -43,8 +45,18 @@ function AppContent() {
   }, [isDark]);
 
   useEffect(() => {
-    checkAuth();
+    if (pagePath === '/') {
+      setAuthChecking(false);
+    } else {
+      checkAuth();
+    }
   }, []);
+
+  useEffect(() => {
+    if (authChecking || pagePath === '/') return;
+    if (user && pagePath === '/login') window.location.replace('/dashboard');
+    if (!user && pagePath !== '/login') window.location.replace('/login');
+  }, [authChecking, user, pagePath]);
 
   const checkAuth = async () => {
     setAuthChecking(true);
@@ -93,8 +105,11 @@ function AppContent() {
       showToast('Berhasil keluar', 'info');
     } catch {
       setUser(null);
+      window.location.assign('/login');
     }
   };
+
+  if (pagePath === '/') return <LandingView />;
 
   if (authChecking) {
     return (
@@ -116,8 +131,7 @@ function AppContent() {
       <LoginView
         onLoginSuccess={(loggedInUser) => {
           setUser(loggedInUser);
-          loadSites();
-          showToast(`Selamat datang, ${loggedInUser.name}!`, 'success');
+          window.location.replace('/dashboard');
         }}
       />
     );

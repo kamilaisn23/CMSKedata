@@ -1,6 +1,22 @@
 import express, { Request, Response } from 'express';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const openapiRouter = express.Router();
+const require = createRequire(import.meta.url);
+const swaggerAssets = path.dirname(require.resolve('swagger-ui-dist/package.json'));
+
+// Serve only the assets used by this page, without relying on a third-party CDN.
+for (const asset of ['swagger-ui.css', 'swagger-ui-bundle.js']) {
+  openapiRouter.get(`/docs/assets/${asset}`, (_req, res) => {
+    res.sendFile(path.join(swaggerAssets, asset));
+  });
+}
+
+openapiRouter.get('/docs/assets/kedata-docs.css', (_req, res) => {
+  res.sendFile(fileURLToPath(new URL('../../public/kedata-docs.css', import.meta.url)));
+});
 
 export const openapiSpec = {
   openapi: '3.0.3',
@@ -421,87 +437,79 @@ openapiRouter.get('/openapi.json', (_req: Request, res: Response) => {
 });
 
 openapiRouter.get('/docs', (_req: Request, res: Response) => {
-  // Render Swagger UI / Scalar Interactive Documentation
   const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Kedata CMS - OpenAPI Interactive Documentation</title>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #DFE2DC;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    .top-header {
-      background: #6C7A89;
-      color: #FFFFFF;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .top-header h1 {
-      margin: 0;
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .top-header a {
-      color: #DFE2DC;
-      text-decoration: none;
-      font-size: 0.9rem;
-      background: rgba(255,255,255,0.15);
-      padding: 0.35rem 0.75rem;
-      border-radius: 4px;
-    }
-    .top-header a:hover {
-      background: rgba(255,255,255,0.25);
-    }
-    #swagger-ui {
-      max-width: 1200px;
-      margin: 1.5rem auto;
-      background: #FFFFFF;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(108, 122, 137, 0.15);
-    }
-    .swagger-ui .topbar { display: none !important; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Referensi REST API Kedata CMS. Pelajari autentikasi, ambil konten situs, dan coba endpoint langsung dari browser.">
+  <title>Dokumentasi API &middot; Kedata CMS</title>
+  <link rel="stylesheet" href="/docs/assets/swagger-ui.css">
+  <link rel="stylesheet" href="/docs/assets/kedata-docs.css">
 </head>
 <body>
-  <div class="top-header">
-    <h1>
-      <span>📦</span> Kedata CMS API Reference
-    </h1>
-    <div style="display:flex; gap: 10px;">
-      <a href="/openapi.json" target="_blank">Raw openapi.json</a>
-      <a href="/">← Back to Dashboard</a>
-    </div>
+  <a class="skip-link" href="#overview">Lewati navigasi</a>
+  <header class="docs-header">
+    <a href="/" class="docs-brand" aria-label="Kedata CMS beranda"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path fill="#a5b4b0" d="M3 3h7v26H3z"/><path fill="#6c7a89" d="M13 3h8L13 15l15 14H18L7 17z"/></svg><span>Kedata CMS</span><span class="docs-header-label">Dokumentasi</span></a>
+    <nav aria-label="Navigasi utama"><a href="/">Beranda</a><a class="header-action" href="/login">Buka workspace <span aria-hidden="true">&nearr;</span></a></nav>
+  </header>
+  <div class="docs-layout">
+    <aside class="docs-sidebar" aria-label="Navigasi dokumentasi">
+      <p>Mulai membangun</p>
+      <nav aria-label="Bagian dokumentasi">
+        <a href="#overview">Pengantar</a>
+        <a href="#quickstart">Request pertama</a>
+        <a href="#authentication">Autentikasi</a>
+        <a href="#reference">Referensi endpoint</a>
+      </nav>
+      <div class="docs-sidebar-bottom"><span>Spesifikasi terbuka</span><a href="/openapi.json" target="_blank" rel="noopener">Lihat OpenAPI JSON <span aria-hidden="true">&nearr;</span></a><p>REST API &middot; v1.0.0</p></div>
+    </aside>
+    <main class="docs-main">
+      <section id="overview" class="docs-intro">
+        <div class="docs-title-row"><h1>Bangun dengan Kedata.</h1><span class="version">API v1</span></div>
+        <p>Konten dari satu workspace, untuk setiap aplikasi Anda. Gunakan REST API untuk mengambil artikel, halaman, media, dan struktur situs.</p>
+        <div class="docs-facts"><span>Format <strong>JSON</strong></span><span>Base URL <code>/api/v1</code></span><span>Autentikasi <strong>API key per situs</strong></span></div>
+      </section>
+      <section id="quickstart" class="docs-quickstart" aria-labelledby="quickstart-title">
+        <div><h2 id="quickstart-title">Request pertama</h2><p>Ambil API key situs dari workspace. Ganti <code>YOUR_SITE_API_KEY</code> dengan key Anda, lalu jalankan contoh ini di terminal.</p><a href="#reference" class="docs-inline-link">Atau coba langsung di bawah <span aria-hidden="true">&nearr;</span></a></div>
+        <div class="docs-code"><div><span>Terminal</span><span>cURL</span></div><pre tabindex="0" aria-label="Contoh request cURL"><code>curl 'http://localhost:3000/api/v1/posts?perPage=5' &#92;
+  -H 'x-api-key: YOUR_SITE_API_KEY'</code></pre><p>Gunakan domain server CMS Anda saat integrasi.</p></div>
+      </section>
+      <section id="authentication" class="docs-auth" aria-labelledby="auth-title">
+        <h2 id="auth-title">Satu key untuk setiap situs.</h2><p>Kirim API key melalui header <code>x-api-key</code>. Di referensi berikut, klik <strong>Authorize</strong> dan masukkan key situs sebelum menjalankan request. Key hanya memberi akses ke konten situs terkait.</p>
+      </section>
+      <section id="reference" class="docs-reference" aria-labelledby="reference-title">
+        <div class="docs-reference-head"><div><h2 id="reference-title">Referensi endpoint</h2><p>Pilih endpoint untuk melihat parameter, contoh respons, dan mencoba request.</p></div><a href="/openapi.json" target="_blank" rel="noopener">OpenAPI JSON <span aria-hidden="true">&nearr;</span></a></div>
+        <div id="swagger-ui"><p role="status">Memuat dokumentasi API&hellip;</p></div>
+      </section>
+      <footer class="docs-footer"><span>Kedata CMS &middot; Dokumentasi API</span><a href="#overview">Kembali ke atas &uarr;</a></footer>
+    </main>
   </div>
-  <div id="swagger-ui"></div>
-  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <noscript>Aktifkan JavaScript untuk dokumentasi interaktif, atau <a href="/openapi.json">unduh spesifikasi OpenAPI</a>.</noscript>
+  <script src="/docs/assets/swagger-ui-bundle.js"></script>
   <script>
     window.onload = function() {
+      if (typeof SwaggerUIBundle !== 'function') {
+        document.getElementById('swagger-ui').innerHTML = '<p role="alert">API documentation could not load. Reload this page or <a href="/openapi.json">download the OpenAPI specification</a>.</p>';
+        return;
+      }
       SwaggerUIBundle({
         url: "/openapi.json",
         dom_id: '#swagger-ui',
         deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIBundle.SwaggerUIStandalonePreset
-        ],
+        filter: true,
+        docExpansion: 'list',
+        defaultModelsExpandDepth: -1,
+        displayRequestDuration: true,
+        persistAuthorization: false,
+        presets: [SwaggerUIBundle.presets.apis],
+        validatorUrl: null,
         layout: "BaseLayout"
       });
     }
   </script>
 </body>
 </html>`;
-
   res.setHeader('Content-Type', 'text/html');
   res.status(200).send(html);
 });
