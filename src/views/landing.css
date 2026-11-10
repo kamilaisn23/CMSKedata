@@ -27,7 +27,8 @@
 
 /* Header and hero share one field so the first screen is a single colour mass. */
 .kd-header { position:sticky; top:0; z-index:50; background:var(--kd-field); min-height:88px; display:flex; justify-content:space-between; align-items:center; gap:24px; padding-inline:var(--kd-margin); }
-.kd-brand { display:flex; align-items:center; gap:10px; font-weight:600; font-size:16px; letter-spacing:-.025em; }
+.kd-brand { display:inline-flex; align-items:center; gap:0; font-weight:600; font-size:22px; letter-spacing:-.025em; }
+.kd-brand .cms-wordmark { font-size:inherit; }
 .kd-header-actions { display:flex; align-items:center; gap:clamp(16px,2.4vw,32px); }
 .kd-nav-links { display:flex; gap:clamp(16px,2.4vw,32px); align-items:center; font-size:14px; }
 .kd-nav-links a { display:inline-flex; align-items:center; min-height:44px; color:var(--kd-muted); }
@@ -292,7 +293,7 @@
 .dark .kd-demo-sites button[aria-pressed=true] { border-color:#48524b; }
 @media(min-width:1600px) { .kd-landing { --kd-margin:max(88px,calc((100vw - 1440px)/2)); } }
 @media(max-width:1100px) { .kd-nav-links { gap:16px; font-size:13px; } .kd-header-actions { gap:20px; } .kd-hero { gap:32px; } .kd-demo-sites { flex-direction:column; } .kd-demo-sites button { min-height:40px; } }
-@media(max-width:900px) { .kd-hero { grid-template-columns:1fr; padding-block:40px 56px; gap:40px; } .kd-hero-copy { max-width:640px; } .kd-hero-statement { font-size:64px; } .kd-demo-sites { flex-direction:row; } .kd-demo { width:100%; } .kd-faq { grid-template-columns:1fr; } .kd-nav-links { gap:12px; font-size:12px; } .kd-brand { font-size:14px; } .kd-header-actions { gap:12px; } }
+@media(max-width:900px) { .kd-hero { grid-template-columns:1fr; padding-block:40px 56px; gap:40px; } .kd-hero-copy { max-width:640px; } .kd-hero-statement { font-size:64px; } .kd-demo-sites { flex-direction:row; } .kd-demo { width:100%; } .kd-faq { grid-template-columns:1fr; } .kd-nav-links { gap:12px; font-size:12px; } .kd-brand { font-size:19px; } .kd-header-actions { gap:12px; } }
 @media(max-width:700px) { .kd-hero-statement { font-size:clamp(44px,12vw,64px); } .kd-hero-description { font-size:16px; margin-top:20px!important; } .kd-hero-buttons { gap:10px 20px; margin-top:24px; } .kd-hero-note { font-size:12px; gap:7px; margin-top:20px!important; } .kd-demo-body { padding:14px; } .kd-demo-top { padding:14px; } .kd-demo-sites { flex-direction:column; } .kd-demo-preview { padding:16px; } .kd-demo-foot { padding:0 14px 14px; } .kd-demo-top,.kd-demo-foot { font-size:11px; } .kd-demo-articles button { padding-inline:4px; } .kd-search,.kd-capabilities,.kd-flow,.kd-api,.kd-faq { padding-block:48px; } .kd-search-control { flex-direction:row; align-items:center; gap:10px; flex-wrap:wrap; } .kd-search-input { width:calc(100% - 34px); margin:0; font-size:16px; } .kd-search-clear { margin-left:32px; } .kd-search-title { font-size:24px; } .kd-cap-row { grid-template-columns:1fr; gap:8px; padding-block:12px; } .kd-result { gap:4px; } .kd-plate-head,.kd-plate-lower { gap:24px; } .kd-plate { padding-block:40px; } .kd-frag-row span { display:block; } .kd-frag-row span::before { display:none; } .kd-footer-name { font-size:48px; } .kd-landing .kd-cta-link { min-height:0; gap:36px; } }
 @media(prefers-reduced-motion:reduce) { .kd-demo,.kd-demo-preview { animation:none; } .kd-primary:hover { transform:none; } }
 /* Keep reading sizes consistent across the public sections. */
@@ -377,7 +378,7 @@
 @media(prefers-reduced-motion:reduce) { .kd-hero-ribbon { animation:none; transform:none; } .kd-background-toggle { display:none; } }
 
 /* Product-specific paths replace the long FAQ accordion. */
-.kd-team { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:clamp(32px,6vw,96px); padding:88px var(--kd-margin); background:var(--kd-ground); scroll-margin-top:96px; }
+.kd-landing .kd-team { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:clamp(32px,6vw,96px); padding:88px var(--kd-margin); background:var(--kd-ground); scroll-margin-top:96px; }
 .kd-team-intro h2 { font-size:var(--kd-heading); line-height:1.1; }
 .kd-team-intro p { margin-top:24px; max-width:34ch; font-size:16px; line-height:1.7; color:var(--kd-muted); }
 .kd-team-workspace { min-width:0; }
@@ -393,8 +394,8 @@
 .kd-team-tasks dt { font-weight:500; }
 .kd-team-tasks dd { margin:0; color:var(--kd-muted); line-height:1.6; }
 .kd-team-detail .kd-text-link { gap:12px; }
-@media(max-width:900px) { .kd-team { grid-template-columns:1fr; gap:32px; padding-block:64px; } .kd-team-intro p { max-width:52ch; } }
-@media(max-width:700px) { .kd-team { padding-block:48px; } .kd-team-intro h2 { font-size:32px; } .kd-team-switch button { padding-inline:8px; font-size:12px; } .kd-team-detail { padding-top:24px; } .kd-team-tasks { padding:20px; } .kd-team-tasks>div { grid-template-columns:1fr; gap:5px; } }
+@media(max-width:900px) { .kd-landing .kd-team { grid-template-columns:1fr; gap:32px; padding-block:64px; } .kd-team-intro p { max-width:52ch; } }
+@media(max-width:700px) { .kd-landing .kd-team { padding-block:48px; } .kd-team-intro h2 { font-size:32px; } .kd-team-switch button { padding-inline:8px; font-size:12px; } .kd-team-detail { padding-top:24px; } .kd-team-tasks { padding:20px; } .kd-team-tasks>div { grid-template-columns:1fr; gap:5px; } }
 
 /* Dramatic Kedata slate stage: layered topography, slow motion and pointer depth. */
 .kd-hero-stage,.dark .kd-hero-stage { min-height:720px; padding-block:90px 112px; background:#263743; color:#f5f7f6; }
@@ -408,7 +409,7 @@
 .kd-hero-orbit-two { right:-350px; bottom:-110px; width:700px; height:700px; animation-direction:alternate-reverse; }
 .kd-hero-stage[data-paused=true] :is(.kd-hero-contours,.kd-hero-orbit) { animation-play-state:paused; }
 .kd-hero .kd-hero-copy { max-width:1040px; }
-.kd-hero .kd-hero-statement { color:#f5f7f6; font-size:clamp(64px,8vw,116px); line-height:1; letter-spacing:-.065em; font-weight:600; }
+.kd-hero .kd-hero-statement { color:#dfe2dc; font-size:clamp(64px,8vw,116px); line-height:1; letter-spacing:-.065em; font-weight:600; }
 .kd-hero .kd-hero-description { color:#e0e6e8; max-width:53ch; margin-top:32px!important; font-size:17px; }
 .kd-hero .kd-hero-buttons { margin-top:32px; gap:16px 28px; }
 .kd-hero-stage .kd-primary { background:#dfe2dc; color:#263743!important; padding:15px 24px; }

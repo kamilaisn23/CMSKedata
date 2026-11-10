@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Backend Rust"
+  short_description: "Kedata backend standards for Rust (Axum optional): utoipa docs, activity log, thiserror, cargo test. Pairs with rust-expert-best-practices-code-review for idiomatic Rust."

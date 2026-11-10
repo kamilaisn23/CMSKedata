@@ -1,0 +1,8 @@
+{
+  "host": "ftpupload.net",
+  "port": 21,
+  "user": "ISI_USERNAME_FTP_DARI_PANEL",
+  "password": "ISI_PASSWORD_FTP",
+  "remotePath": "",
+  "site_url": "https://domain-anda"
+}

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Contracts"
+  short_description: "Draft API_CONTRACTS.md, DATA_CATALOG.md, ENVIRONMENT_VARIABLES.md from the approved implementation plan — contract-first for split FE/BE."

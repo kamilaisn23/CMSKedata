@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Frontend React"
+  short_description: "Kedata frontend standards for React 19 + TanStack Start: Router/Query, Zustand, react-hook-form + zod, Vitest. Pairs with taste-skill for anti-slop UI."

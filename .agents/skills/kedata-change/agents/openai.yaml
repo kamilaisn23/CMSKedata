@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Change"
+  short_description: "Change control: cascade a scope/spec change through PRD → brief → plan → contracts → test plan with version bumps before work resumes."

@@ -86,7 +86,7 @@ export const MediaView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
     if (activeSite) formData.append('siteId', activeSite.id);
 
     try {
-      const res = await fetch('/api/admin/media/upload', {
+      const res = await fetch(`/api/admin/media/upload${activeSite ? `?siteId=${encodeURIComponent(activeSite.id)}` : ''}`, {
         method: 'POST',
         body: formData,
       });

@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "skills": {
+    "kedata-ask": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ask/SKILL.md",
+      "computedHash": "3cea349627f8e72296ef473c3b34002fc12f29339d7361ddf98165d95ae500e5"
+    },
+    "kedata-audit": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-audit/SKILL.md",
+      "computedHash": "1ca1d7ea66ee02247e05729efb7a2cf0a8c6d916911c3863e5f489010f786a59"
+    },
+    "kedata-backend-go": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/backend/kedata-backend-go/SKILL.md",
+      "computedHash": "88e182c934a108e1b1402933c82ad386515d5026d58f3155d6da3cefc00ceed2"
+    },
+    "kedata-backend-node": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/backend/kedata-backend-node/SKILL.md",
+      "computedHash": "9f489a68172739abe34fb86dbf6aedd8a51f19c85911a3f988704ddf27b12091"
+    },
+    "kedata-backend-python": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/backend/kedata-backend-python/SKILL.md",
+      "computedHash": "ad555433a96b662216442bb470b3bbb6e4cd8def994e331750828aaf50450053"
+    },
+    "kedata-backend-rust": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/backend/kedata-backend-rust/SKILL.md",
+      "computedHash": "f6460b3d718e56e94731d0fab4a2ef9cd37a4538ec73c95882ad88d04c5c8766"
+    },
+    "kedata-brainstorm": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/product/kedata-brainstorm/SKILL.md",
+      "computedHash": "0f8b20db594de4d6d7f2aa2b13b8b73c833085af5c99dd8be3515ea92c28a453"
+    },
+    "kedata-change": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-change/SKILL.md",
+      "computedHash": "20c063e49f81b3cc05fbbc74392570bc3f8d03a42002a3ad174bfe88415f14a0"
+    },
+    "kedata-contracts": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/product/kedata-contracts/SKILL.md",
+      "computedHash": "b1cc0d26f758bfabd36598debf74a2884d74bdbaaab25574dea74d435d4317aa"
+    },
+    "kedata-deploy": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-deploy/SKILL.md",
+      "computedHash": "f3329b56362fe5701cf8c182cb10e0a9760128071bebd9bab7e3db89dd52e909"
+    },
+    "kedata-design-brief": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/product/kedata-design-brief/SKILL.md",
+      "computedHash": "bc931858a0fe013b4f1848aa5b5933643141924ece81ed51a044b9b0696eaae4"
+    },
+    "kedata-design-frontend": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/design/kedata-design-frontend/SKILL.md",
+      "computedHash": "35d86ed180e9e5478624760f4353782c09fa321713af2ac8955fadfda00fc5b1"
+    },
+    "kedata-frontend-nuxt": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend/kedata-frontend-nuxt/SKILL.md",
+      "computedHash": "d16268e6c4924a652dbac042a4673aefc3a8eae781807a90efa5e2f40ed4f5d8"
+    },
+    "kedata-frontend-react": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend/kedata-frontend-react/SKILL.md",
+      "computedHash": "b1699ecf9f9e62b39eca33ca413060d8cb6082e4877ba6d16923b3357b9ec74a"
+    },
+    "kedata-implementation-plan": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/product/kedata-implementation-plan/SKILL.md",
+      "computedHash": "f439b1efe86e203b64bd16792721632bc2535ed734d8e9beb1535b478f1f4960"
+    },
+    "kedata-ponytail": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ponytail/SKILL.md",
+      "computedHash": "f31f9abfed10a889d87ab7f3a48c1e7b783577d3209c068978338e47c02cdc14"
+    },
+    "kedata-ponytail-audit": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ponytail-audit/SKILL.md",
+      "computedHash": "0024a702edb5c700a6a29698034d2218a43adbebecd0f52c21926320b0a6088f"
+    },
+    "kedata-ponytail-debt": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ponytail-debt/SKILL.md",
+      "computedHash": "52d755e178f6f73a8ba2fe5f67b6480fb4b6584b1064d5473174c5f9c07af66f"
+    },
+    "kedata-ponytail-gain": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ponytail-gain/SKILL.md",
+      "computedHash": "9de74b44ea647ff7eb519b63b1737094c0714fa29b843a2c86dc804405769431"
+    },
+    "kedata-ponytail-help": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ponytail-help/SKILL.md",
+      "computedHash": "e22d5b1c96514e1173c2542652170351dc347dab3ed4e610fa9ce10a10068765"
+    },
+    "kedata-ponytail-review": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-ponytail-review/SKILL.md",
+      "computedHash": "4d2730683039064f902ea0f03e8a7faa1f786b127fed5a9bd06e8540fb5ac7a3"
+    },
+    "kedata-prd": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/product/kedata-prd/SKILL.md",
+      "computedHash": "11ec545b28077efd0021da2cc9b2dd2104701f7af15d47634696ee30a431b6a9"
+    },
+    "kedata-qa-automation": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-qa-automation/SKILL.md",
+      "computedHash": "3e25c4f84c7b85a658d48c28a4d8b0d7074682520e02f58fa93fabfebec53697"
+    },
+    "kedata-repo": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-repo/SKILL.md",
+      "computedHash": "8b3f30ab40b9e679e2ac7de9cf6564ad3c0cfc1916f398d4f6b1c2fc442e2a92"
+    },
+    "kedata-reverse": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-reverse/SKILL.md",
+      "computedHash": "9280652603053758287ed953cf4bd1d9f66140996b3769e7c926514db87ca7fa"
+    },
+    "kedata-review": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-review/SKILL.md",
+      "computedHash": "d7776353c3e3bd63e8aad3d368ca522b9a93d247a1c620ba63b0cb1f57e1a6fe"
+    },
+    "kedata-seo": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-seo/SKILL.md",
+      "computedHash": "4a465ba660591f6dc04eb7bede012b35fbb5852c78f092580b0417a45e28a5a1"
+    },
+    "kedata-system": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-system/SKILL.md",
+      "computedHash": "5bbb138eea4f15a6210ab6c8e740589f60da0e55ddb8aff21ec04bc1d3ba839c"
+    },
+    "kedata-test-plan": {
+      "source": "Kedata-Indonesia/vibeskills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/kedata-test-plan/SKILL.md",
+      "computedHash": "1161c36165802e4f6fa6a3e5d3cc30b2a3ffde55d9867e5d32cd1eec27f41ed2"
+    }
+  }
+}

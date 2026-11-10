@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Backend Python"
+  short_description: "Kedata backend standards for Python + FastAPI: auto docs, activity log, pydantic, pytest."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Ask"
+  short_description: "Where is this codebase? Inspects artifacts, maps the pipeline stage, and tells you the next step + which skill to run."

@@ -1,5 +1,15 @@
 # API Contracts: Kedata CMS (rekonstruksi)
 
+> Varian PHP/InfinityFree v1.0 (2026-11-10): path/payload admin dan public dipertahankan, PDO MySQL, cookie sesi yang sama, scope/peran yang sama. Backup varian menggunakan GET `/api/admin/backups/export` (ADMIN, ZIP berisi schema.sql + data.sql + uploads; tanpa Session); restore melalui phpMyAdmin. Paket backup SQLite lama tidak diterima langsung. Draft preview mensyaratkan sesi penerbit yang berhak selain token preview; respons preview no-store. Endpoint `/setup` terkunci bila User ada, memerlukan setup_token privat untuk instalasi kosong. InfinityFree dapat memblokir API eksternal. Lihat [INFINITYFREE.md](INFINITYFREE.md).
+
+> Kontrak v0.4: GET `/api/admin/calendar?month=YYYY-MM&siteId=opsional`, scope akun/situs dan format respons di [EDITORIAL_CALENDAR.md](EDITORIAL_CALENDAR.md), tersedia di `/admin-openapi.json`. Autentikasi backend tetap berlaku; pengalihan sesi aktif hanya mengubah alur frontend.
+
+> Kontrak review v0.3: GET/POST `/api/admin/{pages|posts}/:id/review`, bentuk body, status error, dan aturan penguncian di [CONTENT_REVIEW.md](CONTENT_REVIEW.md); tersedia juga di `/admin-openapi.json`. Update/delete/restore lama dapat membalas 409 jika versi/status berubah selama proses.
+
+> Kontrak review v0.3: GET/POST `/api/admin/{pages|posts}/:id/review`, bentuk body, status error, dan aturan penguncian di [CONTENT_REVIEW.md](CONTENT_REVIEW.md); tersedia juga di `/admin-openapi.json`. Update/delete/restore lama dapat membalas 409 jika versi/status berubah selama proses.
+
+> Tambahan kontrak v0.2 (2026-11-09): aturan akses, endpoint akun, `me.siteIds`, penyaringan situs/media, dan query upload mengikuti [ACCESS_CONTROL.md](ACCESS_CONTROL.md). Spesifikasi mesin: `/admin-openapi.json`. Route admin selain login/logout memeriksa peran dan penugasan; 403 berarti dilarang. Baseline yang hanya menyebut pemeriksaan login telah digantikan.
+
 **Status:** Reconstructed — menunggu konfirmasi manusia  
 **Versi:** 0.1 · **Sumber:** `src/server/server.ts`, `src/server/api/*.ts`, `src/server/feeds.ts`, `src/server/openapi.ts`, Zod schemas.  
 Ini mencatat kontrak yang saat ini terimplementasi, bukan kontrak produk yang disetujui. Status untuk error DB/Multer yang tidak dipetakan eksplisit ditandai tidak diketahui.

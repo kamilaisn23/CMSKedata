@@ -4,6 +4,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { dataPaths } from './src/server/data-paths.js';
 
 dotenv.config();
 
@@ -22,11 +23,11 @@ async function startServer() {
   app.use(cookieParser());
 
   // Static uploads directory
-  const uploadsDir = path.resolve(__dirname, 'public', 'uploads');
+  const uploadsDir = dataPaths(__dirname).uploadsDir;
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
   }
-  app.use('/uploads', express.static(uploadsDir));
+  app.use('/uploads', express.static(uploadsDir, { fallthrough: false }));
 
   // Static files in public (cms-embed.js, icons, etc.)
   const publicDir = path.resolve(__dirname, 'public');

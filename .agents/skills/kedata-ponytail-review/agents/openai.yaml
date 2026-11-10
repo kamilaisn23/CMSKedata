@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Ponytail Review"
+  short_description: "Lean review of one diff: correctness, safety, load, tests, speed, and lines that earn their place."

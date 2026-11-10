@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata System"
+  short_description: "Baseline Kedata development rules: read docs, plan-confirm-code-test-verify, house conventions."

@@ -1,5 +1,15 @@
 # Data Catalog: Kedata CMS (rekonstruksi)
 
+> Varian MySQL v1.0 (2026-11-10): model Prisma yang sama dipetakan ke InnoDB/utf8mb4 oleh builder; ID/foreign key VARCHAR(191), tanggal UTC ISO VARCHAR(32), isi HTML/JSON LONGTEXT. Unique dan foreign key dipertahankan. Tabel internal CmsRate untuk pembatasan permintaan lintas proses PHP, CmsLock untuk koordinasi backup/tulis. Ekspor migrasi mengabaikan Session dan mempertahankan ID/hash akun. SQLite asli tidak diubah. Lihat [INFINITYFREE.md](INFINITYFREE.md).
+
+> Tahap 3 v0.4: Page/Post.status kini dapat bernilai IN_REVIEW, hanya lewat endpoint review. Catatan/aktor/waktu memakai AuditLog; snapshot memakai ContentVersion. Tidak menambah kolom/tabel; lihat [CONTENT_REVIEW.md](CONTENT_REVIEW.md).
+
+> Tahap 3 v0.4: Page/Post.status kini dapat bernilai IN_REVIEW, hanya lewat endpoint review. Catatan/aktor/waktu memakai AuditLog; snapshot memakai ContentVersion. Tidak menambah kolom/tabel; lihat [CONTENT_REVIEW.md](CONTENT_REVIEW.md).
+
+> Tambahan v0.3 (2026-11-09): format salinan browser dan retensi di [EDITOR_DRAFTS.md](EDITOR_DRAFTS.md). Tidak ada perubahan schema backend. Salinan editor bukan konten resmi.
+
+> Tambahan katalog v0.2 (2026-11-09): model `SiteMembership(userId, siteId)` dengan primary key gabungan, index `siteId`, dan foreign key cascade ke User/Site; `User.memberships` serta `Site.memberships` adalah relasi balik. Peran didukung: ADMIN, MANAGER, EDITOR, PUBLISHER. Data User lama dipertahankan. Lihat [ACCESS_CONTROL.md](ACCESS_CONTROL.md) untuk migrasi dan aturan akses.
+
 **Status:** Reconstructed — menunggu konfirmasi manusia  
 **Versi:** 0.1 · **Sumber:** `prisma/schema.prisma` dan route/service code.  
 DB provider yang ditemukan: SQLite. Tipe Prisma ditulis apa adanya; nilai JSON disimpan sebagai `String`, bukan kolom JSON tervalidasi.

@@ -1,0 +1,32 @@
+.kd-team { width:100%; max-width:1280px; padding:32px; color:inherit; }
+.kd-team-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; margin-bottom:28px; }
+.kd-team h1 { font-size:24px; font-weight:600; letter-spacing:-.03em; }
+.kd-team h2 { font-size:18px; font-weight:600; }
+.kd-team-heading p,.kd-team-help { margin-top:8px; color:#64748b; font-size:14px; line-height:1.6; }
+.kd-team button { min-height:40px; padding:9px 16px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; transition:background .15s,border-color .15s; }
+.kd-team button[type=submit],.kd-team-heading button { background:#242a31; border-color:#242a31; color:white; }
+.kd-team button[type=submit]:hover:not(:disabled),.kd-team-heading button:hover:not(:disabled) { background:#3a424c; border-color:#3a424c; }
+.kd-team button:disabled { opacity:.5; cursor:not-allowed; }
+.kd-team button:hover:not(:disabled) { filter:brightness(.95); }
+.kd-team :is(button,input,select):focus-visible { outline:2px solid #6c7a89; outline-offset:3px; }
+.kd-team-form { display:grid; gap:20px; max-width:640px; }
+.kd-team-form label { display:grid; gap:8px; font-size:14px; }
+.kd-team-form :is(input:not([type=checkbox]),select) { width:100%; min-height:44px; border:1px solid #cbd5e1; border-radius:6px; background:transparent; padding:10px 12px; }
+.kd-team fieldset { border:1px solid #e2e8f0; border-radius:8px; padding:16px; display:grid; gap:12px; }
+.kd-team-form .kd-team-check { display:flex; align-items:center; gap:10px; min-height:32px; }
+.kd-team-check input { width:18px; height:18px; accent-color:#4f5a66; }
+.kd-team-actions { display:flex; gap:12px; }
+.kd-team-table { position:relative; overflow-x:auto; }
+.kd-team table { border-collapse:collapse; width:100%; min-width:600px; font-size:14px; }
+.kd-team :is(th,td) { padding:16px 12px; text-align:left; border-bottom:1px solid #e2e8f0; vertical-align:top; }
+.kd-team th { font-weight:500; color:#64748b; }
+.kd-team td strong { font-weight:500; }
+.kd-team td span { display:block; margin-top:4px; color:#64748b; }
+.kd-team-error { color:#be123c; margin-bottom:20px; }
+.dark .kd-team :is(th,td,fieldset) { border-color:#3e4651; }
+.dark .kd-team :is(input,select,button) { border-color:#53616e; }
+.dark .kd-team select { background:#1e2328; }
+.dark .kd-team :is(.kd-team-help,.kd-team-heading p,th,td span) { color:#aab7c5; }
+.dark .kd-team-error { color:#fda4af; }
+@media(max-width:768px) { .kd-team { padding:24px; } .kd-team-heading { flex-direction:column; gap:16px; } }
+@media(max-width:480px) { .kd-team { padding:16px; } }

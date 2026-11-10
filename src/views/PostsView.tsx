@@ -18,6 +18,12 @@ import { TipTapEditor } from '../components/TipTapEditor';
 import { VersionHistoryModal } from '../components/VersionHistoryModal';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { useToast } from '../components/Toast';
+import { canEditContent, canPublish } from '../lib/access';
+import { PostDraftSchema, draftKey } from '../lib/editorDrafts';
+import { useEditorDraft } from '../hooks/useEditorDraft';
+import { EditorDraftNotice } from '../components/EditorDraftNotice';
+import { ContentReview } from '../components/ContentReview';
+import { MediaPickerModal } from '../components/MediaPickerModal';
 
 interface PostItem {
   id: string;
@@ -28,7 +34,7 @@ interface PostItem {
   contentHtml: string;
   contentJson: string;
   featuredImage?: string;
-  status: 'DRAFT' | 'PUBLISHED' | 'SCHEDULED';
+  status: 'DRAFT' | 'PUBLISHED' | 'SCHEDULED' | 'IN_REVIEW';
   categoryId?: string;
   category?: { id: string; name: string };
   tags?: { tag: { id: string; name: string } }[];
@@ -43,9 +49,13 @@ interface PostItem {
 
 interface PostsViewProps {
   activeSite: Site | null;
+  role: string;
+  userId: string;
+  initialEditId?: string | null;
+  onClearInitialEdit?: () => void;
 }
 
-export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
+export const PostsView: React.FC<PostsViewProps> = ({ activeSite, role, userId, initialEditId, onClearInitialEdit }) => {
   const [posts, setPosts] = useState<PostItem[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [availableTags, setAvailableTags] = useState<{ id: string; name: string }[]>([]);
@@ -75,8 +85,25 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
   // Modals
   const [deleteTarget, setDeleteTarget] = useState<PostItem | null>(null);
   const [versionTarget, setVersionTarget] = useState<PostItem | null>(null);
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
 
   const { showToast } = useToast();
+  const baseUpdatedAt = posts.find(post => post.id === currentId)?.updatedAt || null;
+  const draft = useEditorDraft({
+    storageKey: draftKey(userId, activeSite?.id || '', 'POST', currentId), enabled: isEditing && !!activeSite,
+    baseUpdatedAt, schema: PostDraftSchema,
+    data: { title, slug, excerpt, contentHtml, contentJson, featuredImage, status, categoryId,
+      tagIds: selectedTagIds, scheduledAt, metaTitle, metaDescription, ogImage },
+  });
+  const restoreDraft = () => {
+    const value = draft.restore();
+    if (!value) return;
+    setTitle(value.title); setSlug(value.slug); setExcerpt(value.excerpt);
+    setContentHtml(value.contentHtml); setContentJson(value.contentJson); setFeaturedImage(value.featuredImage);
+    setStatus(canPublish(role) ? value.status : 'DRAFT'); setCategoryId(value.categoryId);
+    setSelectedTagIds(value.tagIds); setScheduledAt(value.scheduledAt);
+    setMetaTitle(value.metaTitle); setMetaDescription(value.metaDescription); setOgImage(value.ogImage);
+  };
 
   useEffect(() => {
     if (activeSite) {
@@ -84,6 +111,17 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
       loadTaxonomies();
     }
   }, [activeSite]);
+
+  useEffect(() => {
+    if (!initialEditId || posts.length === 0) return;
+    const matched = posts.find((p) => p.id === initialEditId);
+    if (matched) {
+      if (canEditContent(role, matched.status)) {
+        handleOpenEdit(matched);
+      }
+      onClearInitialEdit?.();
+    }
+  }, [initialEditId, posts]);
 
   const loadPosts = async () => {
     if (!activeSite) return;
@@ -139,6 +177,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
   };
 
   const handleOpenEdit = (p: PostItem) => {
+    if (p.status === 'IN_REVIEW') return;
     setCurrentId(p.id);
     setTitle(p.title);
     setSlug(p.slug);
@@ -210,6 +249,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
       }
 
       showToast(currentId ? 'Artikel berhasil diperbarui' : 'Artikel berhasil dibuat', 'success');
+      draft.savedToServer();
       setIsEditing(false);
       loadPosts();
     } catch (err: any) {
@@ -302,6 +342,7 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
               <option value="ALL">Semua Status</option>
               <option value="PUBLISHED">Published</option>
               <option value="SCHEDULED">Scheduled</option>
+              <option value="IN_REVIEW">Menunggu review</option>
               <option value="DRAFT">Draft</option>
             </select>
           </div>
@@ -387,10 +428,12 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                                 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                                 : post.status === 'SCHEDULED'
                                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500'
+                                : post.status === 'IN_REVIEW'
+                                ? 'bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300'
+                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
                             }`}
                           >
-                            {post.status}
+                            {post.status === 'IN_REVIEW' ? 'Menunggu review' : post.status}
                           </span>
                         </td>
 
@@ -408,24 +451,30 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
 
                         <td className="p-3.5 text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            <ContentReview kind="posts" content={post} role={role} onChanged={loadPosts} />
                             <button
                               onClick={() => setVersionTarget(post)}
-                              className="p-1.5 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
+                              className="inline-flex items-center justify-center min-w-8 min-h-8 p-2 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
                               title="Riwayat Versi"
+                              aria-label={`Riwayat versi ${post.title}`}
                             >
                               <History className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleOpenEdit(post)}
-                              className="p-1.5 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
+                              disabled={!canEditContent(role, post.status)}
+                              className="inline-flex items-center justify-center min-w-8 min-h-8 p-2 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
                               title="Sunting Artikel"
+                              aria-label={`Sunting artikel ${post.title}`}
                             >
                               <Edit className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => setDeleteTarget(post)}
-                              className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
+                              disabled={!canEditContent(role, post.status)}
+                              className="inline-flex items-center justify-center min-w-8 min-h-8 p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
                               title="Hapus Artikel"
+                              aria-label={`Hapus artikel ${post.title}`}
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -441,6 +490,8 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
       ) : (
         /* Post Editor */
         <form onSubmit={handleSave} className="flex flex-col gap-6">
+          <EditorDraftNotice {...draft} baseUpdatedAt={baseUpdatedAt} onRestore={restoreDraft} onDiscard={draft.discard} />
+          <div inert={!!draft.recovery || saving} className="flex min-w-0 flex-col gap-6">
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -458,8 +509,8 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                 className="text-[13px] font-medium bg-white dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 focus:outline-hidden"
               >
                 <option value="DRAFT">Draft</option>
-                <option value="PUBLISHED">Published</option>
-                <option value="SCHEDULED">Scheduled</option>
+                {canPublish(role) && <option value="PUBLISHED">Published</option>}
+                {canPublish(role) && <option value="SCHEDULED">Scheduled</option>}
               </select>
 
               <button
@@ -615,9 +666,19 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="cms-postsview-4" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
-                    Gambar Utama (Featured Image URL)
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label htmlFor="cms-postsview-4" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500">
+                      Gambar Utama (Featured Image URL)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setMediaPickerOpen(true)}
+                      className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#6C7A89] hover:text-[#4F5A66] dark:text-[#8E9BA9] cursor-pointer"
+                    >
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      <span>Pilih dari Media</span>
+                    </button>
+                  </div>
                   <input id="cms-postsview-4"
                     type="text"
                     value={featuredImage}
@@ -670,12 +731,22 @@ export const PostsView: React.FC<PostsViewProps> = ({ activeSite }) => {
               </div>
             </div>
           </div>
+          </div>
         </form>
       )}
 
       {/* Modals */}
+      <MediaPickerModal
+        isOpen={mediaPickerOpen}
+        siteId={activeSite?.id}
+        currentUrl={featuredImage}
+        onSelect={(url) => setFeaturedImage(url)}
+        onClose={() => setMediaPickerOpen(false)}
+      />
+
       {versionTarget && (
         <VersionHistoryModal
+          canRestore={canEditContent(role, versionTarget.status)}
           isOpen={!!versionTarget}
           entityType="POST"
           entityId={versionTarget.id}

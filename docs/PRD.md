@@ -1,5 +1,17 @@
 # PRD: Kedata CMS
 
+> Varian InfinityFree v1.0 (2026-11-10), diizinkan pengguna: backend PHP + MySQL terpisah, React dipertahankan, tanpa kuota baru jumlah konten/akun. Versi Node asli dan data dicadangkan. Detail, batas hosting dan kriteria penerimaan: [INFINITYFREE.md](INFINITYFREE.md).
+
+> Tambahan v0.6: kalender bulanan seluruh situs yang boleh diakses dan akses langsung dashboard bagi sesi aktif, sesuai [EDITORIAL_CALENDAR.md](EDITORIAL_CALENDAR.md). Diizinkan pengguna melanjutkan tahap 4.
+
+> Tahap 3 v0.5 (2026-11-09): persetujuan halaman/artikel sesuai [CONTENT_REVIEW.md](CONTENT_REVIEW.md): pengajuan draf, kunci selama review, penerbit menyetujui atau mengembalikan dengan catatan. Diizinkan pengguna melanjutkan tahap 3.
+
+> Tahap 3 v0.5 (2026-11-09): persetujuan halaman/artikel sesuai [CONTENT_REVIEW.md](CONTENT_REVIEW.md): pengajuan draf, kunci selama review, penerbit menyetujui atau mengembalikan dengan catatan. Diizinkan pengguna melanjutkan tahap 3.
+
+> Tambahan kebutuhan v0.4 (2026-11-09), diizinkan pengguna: salinan editor otomatis dan pemulihan isian halaman/artikel sesuai [EDITOR_DRAFTS.md](EDITOR_DRAFTS.md). Pemulihan browser yang sama, bukan sinkronisasi antarperangkat; tidak mengubah publikasi tanpa Simpan.
+
+> Pembaruan akses v0.3 (2026-11-09): scope fitur hak akses telah diizinkan pengguna. Matriks peran, penugasan situs, dan penerimaan di [ACCESS_CONTROL.md](ACCESS_CONTROL.md) menggantikan keterangan Unknown/Inferred tentang otorisasi di baseline ini. Scope produk lainnya tetap draft.
+
 **Status:** Draft — pendalaman kebutuhan dengan skill resmi Kedata PRD
 **Versi:** 0.2  
 **Tanggal:** 2026-11-06  

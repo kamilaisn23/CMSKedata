@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Design Frontend"
+  short_description: "Anti-slop art direction for pages and app screens: reads DESIGN_BRIEF.md, deals researched directions, gates the result in a real browser, then looks and fixes. Adapted from tasteskill v2."

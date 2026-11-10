@@ -1,5 +1,17 @@
 # Implementation Plan: Kedata CMS (baseline rekonstruksi)
 
+> Varian deploy InfinityFree v1.0 (2026-11-10): pengguna memilih PHP 8.2+/PDO MySQL + React build, satu origin/domain, upload FTP ke htdocs, tanpa Docker/Node runtime. Implementasi di `hosting/infinityfree/`, builder `scripts/build-infinityfree.mjs`; source/data Node tidak diganti. Keputusan §3 Unknown di bawah hanya baseline Node; untuk varian ini platform sudah ditentukan. Urutan: backup konsisten → backend/SQL → pengujian MySQL terisolasi → ZIP terpisah dari SQL data → upload dan pemeriksaan oleh pengelola. Kriteria selesai dan rollback: [INFINITYFREE.md](INFINITYFREE.md).
+
+> Tahap 4 v0.5 (2026-11-09): kalender editorial, endpoint scope anggota, bulan WIB, UI/filter/agenda/antrean, serta pengalihan sesi aktif dari root/login ke dashboard. Lihat [EDITORIAL_CALENDAR.md](EDITORIAL_CALENDAR.md). Tanpa migrasi atau dependensi baru; backup menjadi tahap berikutnya.
+
+> Tahap 3 v0.4 (2026-11-09): endpoint review, transaksi status/snapshot/audit, guard mutasi konten, dialog dan filter review, uji peran/situs/konflik. Detail [CONTENT_REVIEW.md](CONTENT_REVIEW.md); tanpa migrasi. Kalender dan backup tetap tahap berikutnya.
+
+> Tahap 3 v0.4 (2026-11-09): endpoint review, transaksi status/snapshot/audit, guard mutasi konten, dialog dan filter review, uji peran/situs/konflik. Detail [CONTENT_REVIEW.md](CONTENT_REVIEW.md); tanpa migrasi. Kalender dan backup tetap tahap berikutnya.
+
+> Tahap 2 v0.3 (2026-11-09): [EDITOR_DRAFTS.md](EDITOR_DRAFTS.md) menetapkan cadangan editor lokal, debounce 700 ms, pemulihan eksplisit, isolasi akun/situs/record, dan perlindungan gagal simpan. Tidak menambah endpoint atau mengubah database. Tahap 3–5 tetap berikutnya.
+
+> Tambahan rencana v0.2 (2026-11-09): implementasikan fitur secara berurutan sesuai [ACCESS_CONTROL.md](ACCESS_CONTROL.md): hak akses → autosave → persetujuan → kalender → backup. Tahap pertama meliputi migrasi membership aditif, middleware default-deny, pengelolaan akun, UI sesuai izin, OpenAPI, dan uji HTTP pada DB sementara. Stack/arsitektur tetap. Kriteria selesai: kasus akses, lint/build lulus, tampilan diperiksa; tidak mereset atau seed database pengguna.
+
 **Status:** Reconstructed — menunggu konfirmasi manusia  
 **Versi:** 0.1 · **Tanggal:** 2026-11-06  
 **Dasar:** repository, README, Prisma schema, tests, dan verifikasi lokal satu kali. Ini memotret kondisi saat ini; bukan rencana kerja yang disetujui. Pilihan arsitektur/deployment yang tidak teramati dibiarkan Unknown.

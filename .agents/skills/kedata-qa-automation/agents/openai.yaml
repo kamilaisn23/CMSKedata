@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata QA Automation"
+  short_description: "Runs TEST_PLAN.md cases in a real Playwright browser against a given URL or a running local environment. No test plan: asks for kedata-test-plan first."

@@ -8,3 +8,11 @@ coverage/
 !.env.example
 .taste-skill/
 .cache/
+.backups/
+artifacts/
+hosting/infinityfree/htdocs/cms-private/config.php
+scripts/infinityfree-ftp.json
+hosting/generated-migrate/
+public/openapi.json
+public/admin-openapi.json
+public/docs/assets/

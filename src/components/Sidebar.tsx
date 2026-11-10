@@ -1,6 +1,9 @@
 import React from 'react';
+import { canManageSite } from '../lib/access';
 import {
   LayoutDashboard,
+  CalendarDays,
+  ArchiveRestore,
   FileText,
   Newspaper,
   Tags,
@@ -14,6 +17,9 @@ import {
 
 export type NavTab =
   | 'dashboard'
+  | 'calendar'
+  | 'backups'
+  | 'users'
   | 'pages'
   | 'posts'
   | 'taxonomy'
@@ -25,22 +31,26 @@ export type NavTab =
   | 'api-explorer';
 
 interface SidebarProps {
+  role: string;
   currentTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   open: boolean;
   onClose: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, open, onClose }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ role, currentTab, onSelectTab, open, onClose }) => {
   const menuItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'pages', label: 'Halaman', icon: <FileText className="w-4 h-4" /> },
     { id: 'posts', label: 'Artikel', icon: <Newspaper className="w-4 h-4" /> },
+    { id: 'calendar', label: 'Kalender Editorial', icon: <CalendarDays className="w-4 h-4" /> },
     { id: 'taxonomy', label: 'Kategori & Tag', icon: <Tags className="w-4 h-4" /> },
     { id: 'media', label: 'Media Library', icon: <ImageIcon className="w-4 h-4" /> },
     { id: 'menus', label: 'Menu Navigasi', icon: <MenuIcon className="w-4 h-4" /> },
     { id: 'settings', label: 'Pengaturan Situs', icon: <Settings className="w-4 h-4" /> },
     { id: 'sites', label: 'Kelola Multi-Situs', icon: <Globe2 className="w-4 h-4" /> },
+    { id: 'users', label: 'Tim & Akses', icon: <ShieldCheck className="w-4 h-4" /> },
+    { id: 'backups', label: 'Backup & Pemulihan', icon: <ArchiveRestore className="w-4 h-4" /> },
     { id: 'audit-logs', label: 'Audit Log', icon: <ShieldCheck className="w-4 h-4" /> },
     { id: 'api-explorer', label: 'API & Integrasi', icon: <Terminal className="w-4 h-4" />, badge: 'SDK' },
   ];
@@ -52,7 +62,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab, open,
       </div>
 
       <nav id="cms-navigation" aria-label="Navigasi utama" className="flex flex-col gap-1">
-        {menuItems.map((item) => {
+        {menuItems.filter(item => {
+          if (item.id === 'users' || item.id === 'sites' || item.id === 'backups') return role === 'ADMIN';
+          if (['menus', 'settings', 'audit-logs', 'api-explorer'].includes(item.id)) return canManageSite(role);
+          return true;
+        }).map((item) => {
           const isActive = currentTab === item.id;
           return (
             <React.Fragment key={item.id}>

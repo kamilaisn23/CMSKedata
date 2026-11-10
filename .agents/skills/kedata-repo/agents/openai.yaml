@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Repo"
+  short_description: "GitHub/GitLab communication: draft + open PR/MR in the house template, link issues, gather repo context via gh/glab."

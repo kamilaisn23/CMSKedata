@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Reverse"
+  short_description: "Brownfield onboarding: reverse-engineer PRD, contracts, and a baseline plan from existing code so the pipeline can run."

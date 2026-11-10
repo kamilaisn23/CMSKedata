@@ -15,6 +15,10 @@ import { SitesView } from './views/SitesView';
 import { AuditLogsView } from './views/AuditLogsView';
 import { ApiExplorerView } from './views/ApiExplorerView';
 import { KedataMark } from './components/KedataMark';
+import { UsersView } from './views/UsersView';
+import { canManageSite } from './lib/access';
+import { CalendarView } from './views/CalendarView';
+import { BackupsView } from './views/BackupsView';
 
 function AppContent() {
   const pagePath = window.location.pathname.replace(/\/+$/, '') || '/';
@@ -28,9 +32,16 @@ function AppContent() {
   // Active navigation tab
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [pendingEditId, setPendingEditId] = useState<string | null>(null);
 
   // Dark mode
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    try {
+      return localStorage.getItem('kd_theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
 
   const { showToast } = useToast();
 
@@ -45,17 +56,13 @@ function AppContent() {
   }, [isDark]);
 
   useEffect(() => {
-    if (pagePath === '/') {
-      setAuthChecking(false);
-    } else {
-      checkAuth();
-    }
+    checkAuth();
   }, []);
 
   useEffect(() => {
-    if (authChecking || pagePath === '/') return;
-    if (user && pagePath === '/login') window.location.replace('/dashboard');
-    if (!user && pagePath !== '/login') window.location.replace('/login');
+    if (authChecking) return;
+    if (user && (pagePath === '/' || pagePath === '/login')) window.location.replace('/dashboard');
+    if (!user && pagePath !== '/' && pagePath !== '/login') window.location.replace('/login');
   }, [authChecking, user, pagePath]);
 
   const checkAuth = async () => {
@@ -63,7 +70,7 @@ function AppContent() {
     try {
       const res = await fetch('/api/admin/me');
       const json = await res.json();
-      if (json.data) {
+      if (res.ok && json.data) {
         setUser(json.data);
         await loadSites();
       } else {
@@ -109,9 +116,7 @@ function AppContent() {
     }
   };
 
-  if (pagePath === '/') return <LandingView />;
-
-  if (authChecking) {
+  if (authChecking || (user && (pagePath === '/' || pagePath === '/login')) || (!user && pagePath !== '/' && pagePath !== '/login')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#171B1F] text-slate-600 dark:text-slate-300">
         <div className="flex flex-col items-center gap-3">
@@ -125,6 +130,8 @@ function AppContent() {
       </div>
     );
   }
+
+  if (!user && pagePath === '/') return <LandingView />;
 
   if (!user) {
     return (
@@ -157,20 +164,30 @@ function AppContent() {
         <div className="cms-sidebar-edge" aria-hidden="true" onMouseEnter={() => setSidebarOpen(true)} />
         {sidebarOpen && <button className="cms-sidebar-backdrop" aria-label="Tutup menu navigasi" onClick={() => setSidebarOpen(false)} />}
         {/* Sidebar */}
-        <Sidebar currentTab={currentTab} open={sidebarOpen} onClose={() => { setSidebarOpen(false); document.getElementById('cms-sidebar-toggle')?.focus(); }} onSelectTab={(tab) => { setCurrentTab(tab); if (window.innerWidth <= 1100) { setSidebarOpen(false); document.getElementById('cms-sidebar-toggle')?.focus(); } }} />
+        <Sidebar role={user.role} currentTab={currentTab} open={sidebarOpen} onClose={() => { setSidebarOpen(false); document.getElementById('cms-sidebar-toggle')?.focus(); }} onSelectTab={(tab) => { setCurrentTab(tab); if (window.innerWidth <= 1100) { setSidebarOpen(false); document.getElementById('cms-sidebar-toggle')?.focus(); } }} />
 
         {/* View Port Area */}
-        <main className="cms-main flex-1 overflow-y-auto">
+        <main key={activeSite?.id || 'no-site'} className="cms-main flex-1 overflow-y-auto">
+          {currentTab === 'users' && user.role === 'ADMIN' && <UsersView sites={sites} currentUserId={user.id} />}
+          {currentTab === 'backups' && user.role === 'ADMIN' && <BackupsView />}
+          {currentTab === 'calendar' && <CalendarView sites={sites} onManage={entry => {
+            const site = sites.find(item => item.id === entry.siteId);
+            if (site) {
+              handleSelectSite(site);
+              setPendingEditId(entry.id);
+              setCurrentTab(entry.kind === 'PAGE' ? 'pages' : 'posts');
+            }
+          }} />}
           {currentTab === 'dashboard' && (
-            <DashboardView activeSite={activeSite} onNavigate={setCurrentTab} />
+            <DashboardView activeSite={activeSite} onNavigate={setCurrentTab} role={user.role} />
           )}
-          {currentTab === 'pages' && <PagesView activeSite={activeSite} />}
-          {currentTab === 'posts' && <PostsView activeSite={activeSite} />}
+          {currentTab === 'pages' && <PagesView activeSite={activeSite} role={user.role} userId={user.id} initialEditId={pendingEditId} onClearInitialEdit={() => setPendingEditId(null)} />}
+          {currentTab === 'posts' && <PostsView activeSite={activeSite} role={user.role} userId={user.id} initialEditId={pendingEditId} onClearInitialEdit={() => setPendingEditId(null)} />}
           {currentTab === 'taxonomy' && <TaxonomyView activeSite={activeSite} />}
           {currentTab === 'media' && <MediaView activeSite={activeSite} />}
-          {currentTab === 'menus' && <MenusView activeSite={activeSite} />}
-          {currentTab === 'settings' && <SettingsView activeSite={activeSite} />}
-          {currentTab === 'sites' && (
+          {currentTab === 'menus' && canManageSite(user.role) && <MenusView activeSite={activeSite} />}
+          {currentTab === 'settings' && canManageSite(user.role) && <SettingsView activeSite={activeSite} />}
+          {currentTab === 'sites' && user.role === 'ADMIN' && (
             <SitesView
               sites={sites}
               activeSite={activeSite}
@@ -178,8 +195,8 @@ function AppContent() {
               onSelectSite={handleSelectSite}
             />
           )}
-          {currentTab === 'audit-logs' && <AuditLogsView activeSite={activeSite} />}
-          {currentTab === 'api-explorer' && <ApiExplorerView activeSite={activeSite} />}
+          {currentTab === 'audit-logs' && canManageSite(user.role) && <AuditLogsView activeSite={activeSite} />}
+          {currentTab === 'api-explorer' && canManageSite(user.role) && <ApiExplorerView activeSite={activeSite} />}
         </main>
       </div>
     </div>

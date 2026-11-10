@@ -1,0 +1,29 @@
+.kd-backups { width:100%; max-width:1280px; padding:32px; color:inherit; min-width:0; }
+.kd-backups header { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
+.kd-backups h1 { font-size:24px; font-weight:600; letter-spacing:-.03em; }
+.kd-backups h2 { font-size:18px; font-weight:600; }
+.kd-backups h3 { font-size:15px; font-weight:600; }
+.kd-backups p { margin-top:8px; font-size:14px; color:#64748b; line-height:1.65; }
+.kd-backups .kd-backup-help { margin-block:20px 28px; max-width:90ch; }
+.kd-backups :is(button,a) { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:8px 14px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; cursor:pointer; }
+.kd-backups header button,.kd-backups button[type=submit] { background:#4f5a66; color:white; border-color:#4f5a66; }
+.kd-backups button:disabled { opacity:.5; cursor:not-allowed; }
+.kd-backups :is(button,a,input):focus-visible { outline:2px solid #6c7a89; outline-offset:3px; }
+.kd-backup-table { position:relative; overflow-x:auto; }
+.kd-backups table { width:100%; min-width:680px; border-collapse:collapse; font-size:14px; }
+.kd-backups :is(th,td) { padding:16px 12px; text-align:left; vertical-align:top; border-bottom:1px solid #e2e8f0; }
+.kd-backups th { color:#64748b; font-weight:500; }
+.kd-backup-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.kd-backup-empty { padding:20px 0; }
+.kd-backup-section { border-top:1px solid #e2e8f0; padding-top:24px; margin-top:32px; max-width:900px; }
+.kd-backups label { display:block; font-size:14px; margin:20px 0 8px; }
+.kd-backups input { display:block; max-width:100%; min-height:44px; border:1px solid #cbd5e1; border-radius:6px; padding:10px 12px; margin-bottom:16px; background:transparent; }
+.kd-backup-result { border-left:2px solid #6c7a89; padding:12px 16px; margin-top:20px; }
+.kd-backup-result code { overflow-wrap:anywhere; }
+.kd-backup-result pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; line-height:1.6; margin-top:12px; }
+.kd-backups .kd-backup-error { color:#be123c; margin-bottom:20px; }
+.dark .kd-backups :is(th,td,.kd-backup-section,button,a,input) { border-color:#3e4651; }
+.dark .kd-backups :is(p,th) { color:#aab7c5; }
+.dark .kd-backups .kd-backup-error { color:#fda4af; }
+@media(max-width:768px) { .kd-backups { padding:24px; } .kd-backups header { flex-direction:column; gap:16px; } }
+@media(max-width:480px) { .kd-backups { padding:16px; } }

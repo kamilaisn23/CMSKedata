@@ -11,6 +11,7 @@ export const SettingsView: React.FC<{ activeSite: Site | null }> = ({ activeSite
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [footerText, setFooterText] = useState('');
+  const [customMetadata, setCustomMetadata] = useState('{}');
 
   // Social Links
   const [twitter, setTwitter] = useState('');
@@ -43,6 +44,7 @@ export const SettingsView: React.FC<{ activeSite: Site | null }> = ({ activeSite
         setContactEmail(s.contactEmail || '');
         setContactPhone(s.contactPhone || '');
         setFooterText(s.footerText || '');
+        setCustomMetadata(s.customMetadata || '{}');
 
         try {
           const links = JSON.parse(s.socialLinks || '{}');
@@ -81,7 +83,7 @@ export const SettingsView: React.FC<{ activeSite: Site | null }> = ({ activeSite
         contactPhone,
         socialLinks: JSON.stringify(socialLinksObj),
         footerText,
-        customMetadata: JSON.stringify({}),
+        customMetadata,
       };
 
       const res = await fetch(`/api/admin/settings?siteId=${activeSite.id}`, {
@@ -102,7 +104,7 @@ export const SettingsView: React.FC<{ activeSite: Site | null }> = ({ activeSite
   };
 
   return (
-    <div className="cms-page cms-settings-page p-6 flex flex-col gap-6 max-w-4xl">
+    <div className="cms-page cms-settings-page p-6 flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">

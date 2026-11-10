@@ -2,6 +2,8 @@ import crypto from 'crypto';
 import express, { Request, Response, NextFunction } from 'express';
 import { prisma } from '../db.js';
 import { hashApiKey, checkRateLimit } from '../security.js';
+import { getSessionUser } from '../auth.js';
+import { canAccessSite, canManageSite } from '../../lib/access.js';
 
 export const v1Router = express.Router();
 
@@ -74,15 +76,17 @@ v1Router.use(async (req: Request, res: Response, next: NextFunction): Promise<vo
     });
 
     // If not found by full hash, check if in-dashboard admin session is testing with prefix
-    if (!site && req.cookies?.['kd_cms_session']) {
-      site = await prisma.site.findFirst({
+    if (!site && (req.cookies?.['kd_cms_session'] || req.headers['x-admin-token'])) {
+      const user = await getSessionUser(req);
+      const candidate = user && canManageSite(user.role) ? await prisma.site.findFirst({
         where: {
           OR: [
             { apiKeyPrefix: rawApiKey },
             { slug: rawApiKey },
           ],
         },
-      });
+      }) : null;
+      site = candidate && user && canAccessSite(user, candidate.id) ? candidate : null;
     }
 
     if (!site) {
@@ -469,7 +473,7 @@ v1Router.get('/tags', async (req: Request, res: Response) => {
     where: { siteId: site.id },
     include: {
       _count: {
-        select: { posts: true },
+        select: { posts: { where: { post: { status: 'PUBLISHED' } } } },
       },
     },
     orderBy: { name: 'asc' },

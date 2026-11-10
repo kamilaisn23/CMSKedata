@@ -11,7 +11,8 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "seed": "tsx prisma/seed.ts",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test": "tsx --test tests/**/*.test.ts",
+    "migrate:vercel": "node scripts/migrate-vercel.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -28,6 +29,7 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/multer": "^2.3.0",
     "@types/sanitize-html": "^2.16.2",
+    "@vercel/blob": "^2.9.0",
     "@vitejs/plugin-react": "^6.1.1",
     "bcryptjs": "^3.0.3",
     "cookie": "^2.0.2",

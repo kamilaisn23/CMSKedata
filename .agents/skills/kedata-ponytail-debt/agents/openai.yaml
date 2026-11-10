@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Ponytail Debt"
+  short_description: "Harvest shortcut: comments into a debt ledger with ceilings and upgrade triggers."

@@ -11,7 +11,7 @@ import {
   Menu,
 } from 'lucide-react';
 import { useToast } from './Toast';
-import { KedataMark } from './KedataMark';
+import { KedataWordmark } from './KedataMark';
 import { SiteSwitcher } from './SiteSwitcher';
 
 export interface Site {
@@ -69,14 +69,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Menu size={20}/>
         </button>
         <div className="flex items-center gap-2.5">
-          <button onClick={onToggleSidebar} aria-label="Buka atau tutup navigasi Kedata" aria-expanded={sidebarOpen} aria-controls="cms-sidebar" className="cms-logo-toggle w-10 h-10 flex items-center justify-center">
-            <KedataMark />
+          <button
+            onClick={onToggleSidebar}
+            aria-label="Buka atau tutup navigasi Kedata"
+            aria-expanded={sidebarOpen}
+            aria-controls="cms-sidebar"
+            className="cms-logo-toggle flex items-center gap-2 rounded-lg px-1.5 py-1 hover:bg-slate-100/70 dark:hover:bg-[#282E35] transition"
+          >
+            <KedataWordmark className="text-[20px]" />
           </button>
-          <div className="hidden sm:block">
-            <div className="font-semibold text-lg tracking-tight text-[#293B48] dark:text-[#DFE2DC]">
-              kedata <span className="text-[#6C7A89] font-normal">cms</span>
-            </div>
-            <div className="text-xs text-slate-500">Content workspace</div>
+          <div className="hidden lg:block text-xs text-slate-500">
+            Content workspace
           </div>
         </div>
 

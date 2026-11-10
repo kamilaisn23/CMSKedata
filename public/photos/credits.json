@@ -1,0 +1,50 @@
+[
+ {
+  "file": "public/photos/metal-movable-type.jpg",
+  "media": "image",
+  "ref": "commons:154912",
+  "title": "Metal movable type",
+  "creator": "Willi Heidelbach",
+  "creatorUrl": null,
+  "date": "28 September 2004 (according to Exif data)",
+  "license": "CC BY 2.5",
+  "licenseCode": "by",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Metal_movable_type.jpg",
+  "via": "Wikimedia Commons",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Metal_movable_type.jpg/1920px-Metal_movable_type.jpg",
+  "width": 1920,
+  "height": 1276,
+  "bytes": 955555,
+  "credit": "\"Metal movable type\" by Willi Heidelbach, CC BY 2.5, via Wikimedia Commons",
+  "notes": [],
+  "saved": "2026-11-09T04:56:27.540Z"
+ },
+ {
+  "file": "public/photos/printing-in-a-letterpress.webm",
+  "media": "video",
+  "poster": "public/photos/printing-in-a-letterpress-poster.jpg",
+  "ref": "commons:35691483",
+  "title": "Printing in a letterpress",
+  "creator": "Subhashish Panigrahi",
+  "creatorUrl": null,
+  "date": "2014-09-27",
+  "license": "CC BY-SA 4.0",
+  "licenseCode": "by-sa",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "creditRequired": true,
+  "page": "https://commons.wikimedia.org/wiki/File:Printing_in_a_letterpress.webm",
+  "via": "Wikimedia Commons",
+  "video": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/15/Printing_in_a_letterpress.webm/Printing_in_a_letterpress.webm.480p.vp9.webm",
+  "width": 854,
+  "height": 480,
+  "duration": 27.2,
+  "bytes": 4256823,
+  "credit": "\"Printing in a letterpress\" by Subhashish Panigrahi, CC BY-SA 4.0, via Wikimedia Commons",
+  "notes": [
+   "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+  ],
+  "saved": "2026-11-09T04:57:31.906Z"
+ }
+]

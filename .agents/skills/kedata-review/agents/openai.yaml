@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Review"
+  short_description: "Kedata code review checklist: mandatory/recommended checks, security, testing, docs, comment templates."

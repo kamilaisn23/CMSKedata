@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Backend Go"
+  short_description: "Kedata backend standards for Go + Gin: swaggo Swagger, activity log, clean architecture, httperr errors."

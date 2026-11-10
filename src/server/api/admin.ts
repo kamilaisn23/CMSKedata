@@ -30,34 +30,56 @@ import {
   SiteSettingSchema,
 } from '../security.js';
 import { triggerSiteWebhook } from '../webhooks.js';
+import { authorizeAdmin, requestUser } from '../access.js';
+import { usersRouter } from './users.js';
+import { reviewsRouter } from './reviews.js';
+import { calendarRouter } from './calendar.js';
+import { backupsRouter } from './backups.js';
+import { dataPaths } from '../data-paths.js';
+import { trackAdminWrites } from '../write-pause.js';
+import { canPublish } from '../../lib/access.js';
+
+const editableWhere = (req: Request, record: { id: string; status: string; updatedAt: Date }) => ({
+  id: record.id, updatedAt: record.updatedAt,
+  status: canPublish(requestUser(req).role) ? { equals: record.status, not: 'IN_REVIEW' } : 'DRAFT',
+});
+const contentWriteFailure = (res: Response) => (error: { code?: string }) => {
+  const conflict = error.code === 'P2025';
+  res.status(conflict ? 409 : 500).json({ data: null, error: { code: conflict ? 'CONTENT_CONFLICT' : 'INTERNAL_ERROR', message: conflict ? 'Konten berubah atau sedang direview. Muat ulang daftar.' : 'Gagal menyimpan perubahan konten' } });
+  return null;
+};
 
 export const adminRouter = express.Router();
+adminRouter.use(trackAdminWrites);
 
-// Ensure uploads folder exists
-const UPLOADS_DIR = path.resolve(process.cwd(), 'public', 'uploads');
-if (!fs.existsSync(UPLOADS_DIR)) {
+// Ensure uploads folder exists (Vercel writes uploads to Blob storage instead)
+const onVercel = !!process.env.VERCEL;
+const UPLOADS_DIR = onVercel ? null : dataPaths().uploadsDir;
+if (UPLOADS_DIR && !fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
 // Multer storage for secure media upload
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, UPLOADS_DIR);
-  },
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const sanitizedBase = path
-      .basename(file.originalname, ext)
-      .replace(/[^a-zA-Z0-9_-]/g, '_')
-      .slice(0, 30);
-    const randomHex = crypto.randomBytes(6).toString('hex');
-    cb(null, `kd_${sanitizedBase}_${randomHex}${ext}`);
-  },
-});
+const storage = onVercel
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (_req, _file, cb) => {
+        cb(null, UPLOADS_DIR as string);
+      },
+      filename: (_req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const sanitizedBase = path
+          .basename(file.originalname, ext)
+          .replace(/[^a-zA-Z0-9_-]/g, '_')
+          .slice(0, 30);
+        const randomHex = crypto.randomBytes(6).toString('hex');
+        cb(null, `kd_${sanitizedBase}_${randomHex}${ext}`);
+      },
+    });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+  limits: { fileSize: (onVercel ? 4 : 5) * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     const allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
     if (allowedMimes.includes(file.mimetype)) {
@@ -193,14 +215,26 @@ adminRouter.post('/logout', async (req: Request, res: Response) => {
 // PROTECTED ADMIN ENDPOINTS
 // ----------------------------------------------------
 adminRouter.use(requireAdmin);
+adminRouter.use(authorizeAdmin);
+adminRouter.use('/users', usersRouter);
+adminRouter.use(reviewsRouter);
+adminRouter.use(calendarRouter);
+adminRouter.use('/backups', backupsRouter);
 
 adminRouter.get('/me', (req: Request, res: Response) => {
   res.status(200).json({ data: (req as any).user, error: null });
 });
 
 // ---------------- SITES ----------------
-adminRouter.get('/sites', async (_req: Request, res: Response) => {
+const sanitizeSite = ({ apiKeyHash, webhookSecret, ...site }: any) => ({
+  ...site,
+  hasWebhookSecret: Boolean(webhookSecret),
+});
+
+adminRouter.get('/sites', async (req: Request, res: Response) => {
+  const user = requestUser(req);
   const sites = await prisma.site.findMany({
+    where: user.role === 'ADMIN' ? {} : { id: { in: user.siteIds } },
     orderBy: { createdAt: 'desc' },
     include: {
       _count: {
@@ -208,7 +242,7 @@ adminRouter.get('/sites', async (_req: Request, res: Response) => {
       },
     },
   });
-  res.status(200).json({ data: sites, error: null });
+  res.status(200).json({ data: sites.map(sanitizeSite), error: null });
 });
 
 adminRouter.post('/sites', async (req: Request, res: Response) => {
@@ -255,7 +289,7 @@ adminRouter.post('/sites', async (req: Request, res: Response) => {
 
   res.status(201).json({
     data: {
-      ...site,
+      ...sanitizeSite(site),
       generatedApiKey: rawKey, // Shown only once upon creation
     },
     error: null,
@@ -274,8 +308,9 @@ adminRouter.put('/sites/:id', async (req: Request, res: Response) => {
     data: parsed.data,
   });
 
-  await logAudit(req, site.id, 'UPDATE', 'Site', site.id, parsed.data);
-  res.status(200).json({ data: site, error: null });
+  const { webhookSecret: _secret, ...auditPayload } = parsed.data;
+  await logAudit(req, site.id, 'UPDATE', 'Site', site.id, auditPayload);
+  res.status(200).json({ data: sanitizeSite(site), error: null });
 });
 
 adminRouter.post('/sites/:id/regenerate-api-key', async (req: Request, res: Response) => {
@@ -296,7 +331,7 @@ adminRouter.post('/sites/:id/regenerate-api-key', async (req: Request, res: Resp
 
   res.status(200).json({
     data: {
-      ...updated,
+      ...sanitizeSite(updated),
       generatedApiKey: rawKey,
     },
     error: null,
@@ -401,7 +436,7 @@ adminRouter.put('/pages/:id', async (req: Request, res: Response) => {
   const sanitizedHtml = sanitizeHtmlContent(contentHtml);
 
   const updated = await prisma.page.update({
-    where: { id: req.params.id },
+    where: editableWhere(req, existing),
     data: {
       title,
       slug,
@@ -413,8 +448,9 @@ adminRouter.put('/pages/:id', async (req: Request, res: Response) => {
       ogImage,
       publishedAt: status === 'PUBLISHED' && !existing.publishedAt ? new Date() : existing.publishedAt,
     },
-  });
+  }).catch(contentWriteFailure(res));
 
+  if (!updated) return;
   await logAudit(req, existing.siteId, 'UPDATE', 'Page', updated.id, { title, slug, status });
   triggerSiteWebhook(existing.siteId, status === 'PUBLISHED' ? 'page.published' : 'page.updated', 'Page', updated.id, { title, slug });
 
@@ -428,7 +464,7 @@ adminRouter.delete('/pages/:id', async (req: Request, res: Response) => {
     return;
   }
 
-  await prisma.page.delete({ where: { id: req.params.id } });
+  if (!await prisma.page.delete({ where: editableWhere(req, existing) }).catch(contentWriteFailure(res))) return;
   await logAudit(req, existing.siteId, 'DELETE', 'Page', existing.id, { title: existing.title, slug: existing.slug });
   triggerSiteWebhook(existing.siteId, 'page.deleted', 'Page', existing.id, { slug: existing.slug });
 
@@ -535,11 +571,8 @@ adminRouter.put('/posts/:id', async (req: Request, res: Response) => {
   const { title, slug, excerpt, contentHtml, contentJson, featuredImage, status, categoryId, tagIds, scheduledAt, metaTitle, metaDescription, ogImage } = parsed.data;
   const sanitizedHtml = sanitizeHtmlContent(contentHtml);
 
-  // Clear existing tags and link new
-  await prisma.postTag.deleteMany({ where: { postId: existing.id } });
-
   const updated = await prisma.post.update({
-    where: { id: req.params.id },
+    where: editableWhere(req, existing),
     data: {
       title,
       slug,
@@ -555,12 +588,14 @@ adminRouter.put('/posts/:id', async (req: Request, res: Response) => {
       metaDescription,
       ogImage,
       tags: {
+        deleteMany: {},
         create: (tagIds || []).map((tagId) => ({ tagId })),
       },
     },
     include: { category: true, tags: { include: { tag: true } } },
-  });
+  }).catch(contentWriteFailure(res));
 
+  if (!updated) return;
   await logAudit(req, existing.siteId, 'UPDATE', 'Post', updated.id, { title, slug, status });
   triggerSiteWebhook(existing.siteId, status === 'PUBLISHED' ? 'post.published' : 'post.updated', 'Post', updated.id, { title, slug });
 
@@ -574,7 +609,7 @@ adminRouter.delete('/posts/:id', async (req: Request, res: Response) => {
     return;
   }
 
-  await prisma.post.delete({ where: { id: req.params.id } });
+  if (!await prisma.post.delete({ where: editableWhere(req, existing) }).catch(contentWriteFailure(res))) return;
   await logAudit(req, existing.siteId, 'DELETE', 'Post', existing.id, { title: existing.title, slug: existing.slug });
   triggerSiteWebhook(existing.siteId, 'post.deleted', 'Post', existing.id, { slug: existing.slug });
 
@@ -606,7 +641,7 @@ adminRouter.post('/versions/:id/restore', async (req: Request, res: Response) =>
     if (page) {
       await saveContentVersion('PAGE', page.id, page, user.email);
       const restored = await prisma.page.update({
-        where: { id: page.id },
+        where: editableWhere(req, page),
         data: {
           title: snapshot.title,
           contentHtml: snapshot.contentHtml,
@@ -614,7 +649,8 @@ adminRouter.post('/versions/:id/restore', async (req: Request, res: Response) =>
           metaTitle: snapshot.metaTitle,
           metaDescription: snapshot.metaDescription,
         },
-      });
+      }).catch(contentWriteFailure(res));
+      if (!restored) return;
       await logAudit(req, page.siteId, 'RESTORE_VERSION', 'Page', page.id, { restoredVersion: version.versionNumber });
       res.status(200).json({ data: restored, error: null });
       return;
@@ -624,7 +660,7 @@ adminRouter.post('/versions/:id/restore', async (req: Request, res: Response) =>
     if (post) {
       await saveContentVersion('POST', post.id, post, user.email);
       const restored = await prisma.post.update({
-        where: { id: post.id },
+        where: editableWhere(req, post),
         data: {
           title: snapshot.title,
           excerpt: snapshot.excerpt,
@@ -634,7 +670,8 @@ adminRouter.post('/versions/:id/restore', async (req: Request, res: Response) =>
           metaTitle: snapshot.metaTitle,
           metaDescription: snapshot.metaDescription,
         },
-      });
+      }).catch(contentWriteFailure(res));
+      if (!restored) return;
       await logAudit(req, post.siteId, 'RESTORE_VERSION', 'Post', post.id, { restoredVersion: version.versionNumber });
       res.status(200).json({ data: restored, error: null });
       return;
@@ -663,11 +700,43 @@ adminRouter.post('/categories', async (req: Request, res: Response) => {
     return res.status(400).json({ data: null, error: { code: 'VALIDATION_ERROR', message: parsed.error.issues[0].message } });
   }
 
+  const existing = await prisma.category.findUnique({
+    where: { siteId_slug: { siteId, slug: parsed.data.slug } },
+  });
+  if (existing) {
+    return res.status(400).json({ data: null, error: { code: 'SLUG_EXISTS', message: 'Slug kategori sudah digunakan di situs ini' } });
+  }
+
   const category = await prisma.category.create({
     data: { siteId, ...parsed.data },
   });
   await logAudit(req, siteId, 'CREATE', 'Category', category.id, parsed.data);
   res.status(201).json({ data: category, error: null });
+});
+
+adminRouter.put('/categories/:id', async (req: Request, res: Response) => {
+  const parsed = CategorySchema.partial().safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ data: null, error: { code: 'VALIDATION_ERROR', message: parsed.error.issues[0].message } });
+  }
+  const current = await prisma.category.findUnique({ where: { id: req.params.id } });
+  if (!current) {
+    return res.status(404).json({ data: null, error: { code: 'NOT_FOUND', message: 'Kategori tidak ditemukan' } });
+  }
+  if (parsed.data.slug && parsed.data.slug !== current.slug) {
+    const existing = await prisma.category.findUnique({
+      where: { siteId_slug: { siteId: current.siteId, slug: parsed.data.slug } },
+    });
+    if (existing) {
+      return res.status(400).json({ data: null, error: { code: 'SLUG_EXISTS', message: 'Slug kategori sudah digunakan di situs ini' } });
+    }
+  }
+  const category = await prisma.category.update({
+    where: { id: req.params.id },
+    data: parsed.data,
+  });
+  await logAudit(req, category.siteId, 'UPDATE', 'Category', category.id, parsed.data);
+  res.status(200).json({ data: category, error: null });
 });
 
 adminRouter.delete('/categories/:id', async (req: Request, res: Response) => {
@@ -694,11 +763,43 @@ adminRouter.post('/tags', async (req: Request, res: Response) => {
     return res.status(400).json({ data: null, error: { code: 'VALIDATION_ERROR', message: parsed.error.issues[0].message } });
   }
 
+  const existing = await prisma.tag.findUnique({
+    where: { siteId_slug: { siteId, slug: parsed.data.slug } },
+  });
+  if (existing) {
+    return res.status(400).json({ data: null, error: { code: 'SLUG_EXISTS', message: 'Slug tag sudah digunakan di situs ini' } });
+  }
+
   const tag = await prisma.tag.create({
     data: { siteId, ...parsed.data },
   });
   await logAudit(req, siteId, 'CREATE', 'Tag', tag.id, parsed.data);
   res.status(201).json({ data: tag, error: null });
+});
+
+adminRouter.put('/tags/:id', async (req: Request, res: Response) => {
+  const parsed = TagSchema.partial().safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ data: null, error: { code: 'VALIDATION_ERROR', message: parsed.error.issues[0].message } });
+  }
+  const current = await prisma.tag.findUnique({ where: { id: req.params.id } });
+  if (!current) {
+    return res.status(404).json({ data: null, error: { code: 'NOT_FOUND', message: 'Tag tidak ditemukan' } });
+  }
+  if (parsed.data.slug && parsed.data.slug !== current.slug) {
+    const existing = await prisma.tag.findUnique({
+      where: { siteId_slug: { siteId: current.siteId, slug: parsed.data.slug } },
+    });
+    if (existing) {
+      return res.status(400).json({ data: null, error: { code: 'SLUG_EXISTS', message: 'Slug tag sudah digunakan di situs ini' } });
+    }
+  }
+  const tag = await prisma.tag.update({
+    where: { id: req.params.id },
+    data: parsed.data,
+  });
+  await logAudit(req, tag.siteId, 'UPDATE', 'Tag', tag.id, parsed.data);
+  res.status(200).json({ data: tag, error: null });
 });
 
 adminRouter.delete('/tags/:id', async (req: Request, res: Response) => {
@@ -712,7 +813,8 @@ adminRouter.get('/media', async (req: Request, res: Response) => {
   const siteId = req.query.siteId as string | undefined;
   const where: any = {};
   if (siteId) {
-    where.OR = [{ siteId }, { siteId: null }];
+    if (requestUser(req).role === 'ADMIN') where.OR = [{ siteId }, { siteId: null }];
+    else where.siteId = siteId;
   }
 
   const media = await prisma.media.findMany({
@@ -730,18 +832,41 @@ adminRouter.post('/media/upload', upload.single('file'), async (req: Request, re
     return;
   }
 
-  const siteId = (req.body.siteId as string) || null;
+  const siteId = typeof req.query.siteId === 'string' ? req.query.siteId : (req.body.siteId as string) || null;
+  if (requestUser(req).role !== 'ADMIN' && siteId !== req.query.siteId) {
+    if (file.path) fs.unlinkSync(file.path);
+    res.status(403).json({ data: null, error: { code: 'FORBIDDEN', message: 'Situs tidak diizinkan' } });
+    return;
+  }
   const altText = (req.body.altText as string) || '';
   const caption = (req.body.caption as string) || '';
+
+  let filename = file.filename;
+  let url = `/uploads/${file.filename}`;
+  if (onVercel) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const sanitizedBase = path
+      .basename(file.originalname, ext)
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .slice(0, 30);
+    filename = `kd_${sanitizedBase}_${crypto.randomBytes(6).toString('hex')}${ext}`;
+    const { put } = await import('@vercel/blob');
+    const blob = await put(filename, file.buffer, {
+      access: 'public',
+      contentType: file.mimetype,
+      addRandomSuffix: false,
+    });
+    url = blob.url;
+  }
 
   const media = await prisma.media.create({
     data: {
       siteId,
-      filename: file.filename,
+      filename,
       originalName: file.originalname,
       mimeType: file.mimetype,
       sizeBytes: file.size,
-      url: `/uploads/${file.filename}`,
+      url,
       altText,
       caption,
     },
@@ -769,11 +894,18 @@ adminRouter.delete('/media/:id', async (req: Request, res: Response) => {
   }
 
   // Delete physical file if exists
-  const filePath = path.join(UPLOADS_DIR, media.filename);
-  if (fs.existsSync(filePath)) {
+  if (onVercel) {
     try {
-      fs.unlinkSync(filePath);
+      const { del } = await import('@vercel/blob');
+      await del(media.url);
     } catch {}
+  } else {
+    const filePath = path.join(UPLOADS_DIR as string, media.filename);
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch {}
+    }
   }
 
   await prisma.media.delete({ where: { id: media.id } });

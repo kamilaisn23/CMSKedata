@@ -246,8 +246,9 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                       type="button"
                       onClick={() => handleMoveUp(index)}
                       disabled={index === 0}
-                      className="p-1 text-slate-500 hover:text-slate-800 disabled:opacity-20 rounded"
+                      className="inline-flex items-center justify-center min-w-8 min-h-8 p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#282E35] disabled:opacity-20 rounded transition"
                       title="Geser Naik"
+                      aria-label={`Geser naik ${item.label}`}
                     >
                       <ArrowUp className="w-4 h-4" />
                     </button>
@@ -255,16 +256,18 @@ export const MenusView: React.FC<{ activeSite: Site | null }> = ({ activeSite })
                       type="button"
                       onClick={() => handleMoveDown(index)}
                       disabled={index === items.length - 1}
-                      className="p-1 text-slate-500 hover:text-slate-800 disabled:opacity-20 rounded"
+                      className="inline-flex items-center justify-center min-w-8 min-h-8 p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#282E35] disabled:opacity-20 rounded transition"
                       title="Geser Turun"
+                      aria-label={`Geser turun ${item.label}`}
                     >
                       <ArrowDown className="w-4 h-4" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleRemoveItem(item.id)}
-                      className="p-1 text-slate-500 hover:text-rose-600 rounded ml-2"
+                      className="inline-flex items-center justify-center min-w-8 min-h-8 p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded ml-1 transition"
                       title="Hapus Item"
+                      aria-label={`Hapus item menu ${item.label}`}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

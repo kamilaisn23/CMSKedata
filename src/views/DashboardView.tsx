@@ -16,13 +16,15 @@ import {
 import { Site } from '../components/Navbar';
 import { NavTab } from '../components/Sidebar';
 import { useToast } from '../components/Toast';
+import { canManageSite } from '../lib/access';
 
 interface DashboardViewProps {
+  role: string;
   activeSite: Site | null;
   onNavigate: (tab: NavTab) => void;
 }
 
-export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavigate }) => {
+export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavigate, role }) => {
   const [stats, setStats] = useState({
     pagesCount: 0,
     postsCount: 0,
@@ -46,14 +48,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavi
         fetch(`/api/admin/pages?siteId=${activeSite.id}`),
         fetch(`/api/admin/posts?siteId=${activeSite.id}`),
         fetch(`/api/admin/media?siteId=${activeSite.id}`),
-        fetch(`/api/admin/audit-logs?siteId=${activeSite.id}&perPage=5`),
+        canManageSite(role) ? fetch(`/api/admin/audit-logs?siteId=${activeSite.id}&perPage=5`) : Promise.resolve(null),
       ]);
 
       const [pagesJson, postsJson, mediaJson, logsJson] = await Promise.all([
         pagesRes.json(),
         postsRes.json(),
         mediaRes.json(),
-        logsRes.json(),
+        logsRes ? logsRes.json() : Promise.resolve({ data: [] }),
       ]);
 
       setStats({
@@ -86,7 +88,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavi
   };
 
 
-  if (!activeSite) return <div className="cms-overview"><h1>Dashboard</h1><p>Pilih atau buat situs untuk mulai mengelola konten.</p><button className="cms-primary" onClick={() => onNavigate('sites')}>Kelola situs</button></div>;
+  if (!activeSite) return <div className="cms-overview"><h1>Dashboard</h1><p>{role === 'ADMIN' ? 'Pilih atau buat situs untuk mulai mengelola konten.' : 'Belum ada situs yang ditugaskan. Hubungi admin pusat untuk mendapatkan akses.'}</p>{role === 'ADMIN' && <button className="cms-primary" onClick={() => onNavigate('sites')}>Kelola situs</button>}</div>;
   const metrics = [
     {label:'Halaman', value:stats.pagesCount, tab:'pages' as NavTab, description:'Konten halaman situs'},
     {label:'Artikel', value:stats.postsCount, tab:'posts' as NavTab, description:'Berita dan publikasi'},
@@ -99,7 +101,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavi
     </div>
     <section className="cms-site-strip" aria-label="Situs aktif">
       <div><Globe size={18}/><strong>{activeSite.name}</strong><span>{activeSite.domain || 'Domain belum diatur'}</span></div>
-      <button className="cms-text-button" onClick={() => onNavigate('settings')}>Pengaturan situs <ArrowUpRight size={14}/></button>
+      {canManageSite(role) && <button className="cms-text-button" onClick={() => onNavigate('settings')}>Pengaturan situs <ArrowUpRight size={14}/></button>}
     </section>
     {/* Three equal columns: 3 × ((available width - 2px) / 3) + 2 dividers = available width. */}
     <section className="cms-metrics" aria-label="Ringkasan konten">
@@ -110,16 +112,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ activeSite, onNavi
     <div className="cms-dashboard-grid">
       <section className="cms-panel">
         <div className="cms-section-title"><div><h2>Artikel terbaru</h2><p>Publikasi dan konten yang sedang disiapkan.</p></div><button onClick={() => onNavigate('posts')}>Lihat semua <ArrowUpRight size={14}/></button></div>
-        {!recentPosts.length ? <div className="cms-empty"><p>Belum ada artikel di situs ini.</p><button className="cms-text-button" onClick={() => onNavigate('posts')}>Mulai kelola artikel <ArrowUpRight size={14}/></button></div> : <div className="cms-table-scroll"><table className="cms-post-table"><thead><tr><th>Judul artikel</th><th>Status</th><th>Tanggal</th></tr></thead><tbody>{recentPosts.map(post => <tr key={post.id}><td><button onClick={() => onNavigate('posts')}>{post.title}</button><small>{post.category?.name || 'Tanpa kategori'}</small></td><td><span className={'cms-status cms-status-'+post.status.toLowerCase()}>{post.status === 'PUBLISHED' ? 'Terbit' : post.status === 'SCHEDULED' ? 'Terjadwal' : 'Draf'}</span></td><td>{new Date(post.createdAt).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td></tr>)}</tbody></table></div>}
+        {!recentPosts.length ? <div className="cms-empty"><p>Belum ada artikel di situs ini.</p><button className="cms-text-button" onClick={() => onNavigate('posts')}>Mulai kelola artikel <ArrowUpRight size={14}/></button></div> : <div className="cms-table-scroll"><table className="cms-post-table"><thead><tr><th>Judul artikel</th><th>Status</th><th>Tanggal</th></tr></thead><tbody>{recentPosts.map(post => <tr key={post.id}><td><button onClick={() => onNavigate('posts')}>{post.title}</button><small>{post.category?.name || 'Tanpa kategori'}</small></td><td><span className={'cms-status cms-status-'+post.status.toLowerCase()}>{post.status === 'PUBLISHED' ? 'Terbit' : post.status === 'SCHEDULED' ? 'Terjadwal' : post.status === 'IN_REVIEW' ? 'Menunggu review' : 'Draf'}</span></td><td>{new Date(post.createdAt).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td></tr>)}</tbody></table></div>}
       </section>
-      <section className="cms-panel cms-activity-panel">
+      {canManageSite(role) && <section className="cms-panel cms-activity-panel">
         <div className="cms-section-title"><div><h2>Aktivitas terbaru</h2><p>Perubahan pada konten situs.</p></div><button onClick={() => onNavigate('audit-logs')} aria-label="Lihat semua aktivitas"><ArrowUpRight size={16}/></button></div>
         {!recentLogs.length ? <div className="cms-empty">Belum ada aktivitas di situs ini.</div> : <ul className="cms-activity">{recentLogs.map(log => <li key={log.id}><span className="cms-activity-dot"/><div><strong>{log.action.replaceAll('_',' ')} · {log.entityType}</strong><p>{log.actor}</p></div><time>{new Date(log.createdAt).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</time></li>)}</ul>}
-      </section>
+      </section>}
     </div>
-    <section className="cms-tools" aria-label="Alat publikasi">
+    {canManageSite(role) && <section className="cms-tools" aria-label="Alat publikasi">
       <div><h2>Publikasi & integrasi</h2><p>Periksa jadwal konten atau hubungkan situs melalui API.</p></div>
-      <div><button className="cms-secondary" disabled={publishing} onClick={handleTriggerScheduled}><Clock size={16}/>{publishing ? 'Memeriksa…' : 'Cek jadwal terbit'}</button><button className="cms-secondary" onClick={() => onNavigate('api-explorer')}><Radio size={16}/>API & SDK</button></div>
-    </section>
+      <div>{role === 'ADMIN' && <button className="cms-secondary" disabled={publishing} onClick={handleTriggerScheduled}><Clock size={16}/>{publishing ? 'Memeriksa…' : 'Cek jadwal terbit'}</button>}<button className="cms-secondary" onClick={() => onNavigate('api-explorer')}><Radio size={16}/>API & SDK</button></div>
+    </section>}
   </div>;
 };

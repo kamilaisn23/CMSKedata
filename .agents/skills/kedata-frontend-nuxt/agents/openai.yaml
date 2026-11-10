@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Frontend Nuxt"
+  short_description: "Kedata frontend standards for Vue 3 + Nuxt 3: pages/, Pinia, vee-validate + zod, $fetch composables. Pairs with taste-skill for anti-slop UI."

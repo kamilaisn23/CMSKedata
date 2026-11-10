@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Ponytail Audit"
+  short_description: "Lean repo audit: bugs, risk, load, missing tests, and what to delete. Report only, changes nothing."

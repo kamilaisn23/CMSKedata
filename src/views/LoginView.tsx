@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KedataMark } from '../components/KedataMark';
+import { KedataWordmark } from '../components/KedataMark';
 import { Lock, Mail, ArrowLeft, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 interface LoginViewProps { onLoginSuccess: (user: any) => void; }
@@ -42,8 +42,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           <section className="cms-auth-panel">
             <div className="cms-auth-card">
               <div className="cms-auth-mobile-brand">
-                <KedataMark className="h-9 w-9" />
-                <span>Kedata CMS</span>
+                <KedataWordmark />
               </div>
 
               <h1 className="cms-auth-form-title">Masuk ke dasbor</h1>

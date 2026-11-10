@@ -1,0 +1,10 @@
+.kd-draft-notice { margin-bottom:20px; padding:12px 16px; border:1px solid #cbd5e1; border-radius:6px; color:#475569; font-size:13px; line-height:1.6; }
+.kd-draft-recovery { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+.kd-draft-recovery small { display:block; margin-top:4px; }
+.kd-draft-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.kd-draft-actions button { min-height:44px; padding:8px 12px; border:1px solid #94a3b8; border-radius:6px; cursor:pointer; }
+.kd-draft-actions button:first-child { background:#4f5a66; color:#fff; border-color:#4f5a66; }
+.kd-draft-actions button:focus-visible { outline:2px solid #6c7a89; outline-offset:3px; }
+.kd-draft-notice [role=alert] { color:#be123c; }
+.dark .kd-draft-notice { border-color:#53616e; color:#cbd5e1; }
+.dark .kd-draft-notice [role=alert] { color:#fda4af; }

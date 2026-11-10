@@ -19,6 +19,17 @@ model User {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   sessions     Session[]
+  memberships  SiteMembership[]
+}
+
+model SiteMembership {
+  userId String
+  siteId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site   Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@id([userId, siteId])
+  @@index([siteId])
 }
 
 model Session {
@@ -52,6 +63,7 @@ model Site {
   media         Media[]
   menus         Menu[]
   setting       SiteSetting?
+  memberships   SiteMembership[]
 }
 
 model SiteSetting {

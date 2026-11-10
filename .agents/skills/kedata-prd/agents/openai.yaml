@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata PRD"
+  short_description: "Draft a Product Requirements Document in Kedata's house format (11 sections)."

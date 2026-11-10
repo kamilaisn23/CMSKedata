@@ -96,6 +96,7 @@ export interface AuthenticatedUser {
   email: string;
   name: string;
   role: string;
+  siteIds: string[];
 }
 
 export async function getSessionUser(req: Request): Promise<AuthenticatedUser | null> {
@@ -106,7 +107,7 @@ export async function getSessionUser(req: Request): Promise<AuthenticatedUser | 
 
   const session = await prisma.session.findUnique({
     where: { token },
-    include: { user: true },
+    include: { user: { include: { memberships: { select: { siteId: true } } } } },
   });
 
   if (!session) return null;
@@ -121,6 +122,7 @@ export async function getSessionUser(req: Request): Promise<AuthenticatedUser | 
     email: session.user.email,
     name: session.user.name,
     role: session.user.role,
+    siteIds: session.user.memberships.map(membership => membership.siteId),
   };
 }
 

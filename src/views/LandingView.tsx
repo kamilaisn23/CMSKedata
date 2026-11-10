@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Menu, X, FileText, Globe, Search, Check } from 'lucide-react';
-import { KedataMark } from '../components/KedataMark';
+import { KedataMark, KedataWordmark } from '../components/KedataMark';
 import './landing.css';
 
 type Tone = 'published' | 'scheduled' | 'draft';
@@ -255,7 +255,7 @@ export const LandingView: React.FC = () => {
     <div ref={root} className="kd-landing">
       <a className="kd-skip" href="#konten">Lewati ke konten</a>
       <header ref={headerRef} className="kd-header">
-        <a href="/" className="kd-brand" aria-label="Kedata CMS beranda"><KedataMark className="h-9 w-9" /><span>Kedata CMS</span></a>
+        <a href="/" className="kd-brand" aria-label="Kedata CMS beranda"><KedataWordmark /></a>
         <div className="kd-header-actions">
           <nav id="kd-nav" className={`kd-nav-links${navOpen ? ' is-open' : ''}`} aria-label="Navigasi utama">
             <a href="#fitur" className={active === 'fitur' ? 'is-active' : undefined} aria-current={active === 'fitur' ? 'true' : undefined} onClick={() => setNavOpen(false)}>Kemampuan</a>
@@ -294,7 +294,7 @@ export const LandingView: React.FC = () => {
             </div>
             <svg className="kd-hero-seam" viewBox="0 0 1600 180" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C400 170 1050 -15 1600 85 L1600 180 L0 180Z" /></svg>
           <div className="kd-hero-copy">
-            <h1 id="kd-title" className="kd-hero-statement">Semua situs.<br />Satu dasbor.</h1>
+            <h1 id="kd-title" className="kd-hero-statement">Semua situs,<br />satu ruang kerja.</h1>
             <p className="kd-hero-description">Ruang untuk konten Anda berkembang. Tulis, kelola, dan terbitkan ke banyak website dari satu workspace yang rapi.</p>
             <div className="kd-hero-buttons">
               <a href="/login" className="kd-primary">Masuk ke workspace <ArrowRight size={16} /></a>
@@ -391,7 +391,7 @@ export const LandingView: React.FC = () => {
                 <label htmlFor="kd-demo-title">Judul artikel</label>
                 <input id="kd-demo-title" maxLength={120} value={sampleTitle} onChange={event => setSampleTitle(event.target.value)} placeholder="Tulis judul cerita Anda" />
                 <label htmlFor="kd-demo-body">Isi cerita</label>
-                <textarea id="kd-demo-body" maxLength={1200} rows={5} value={sampleBody} onChange={event => setSampleBody(event.target.value)} placeholder="Mulai menulis di sini�" />
+                <textarea id="kd-demo-body" maxLength={1200} rows={5} value={sampleBody} onChange={event => setSampleBody(event.target.value)} placeholder="Mulai menulis di sini..." />
               </div> : <article className="kd-publishing-preview">
                 <h3>{sampleTitle.trim() || 'Artikel tanpa judul'}</h3>
                 <p>{sampleBody.trim() || 'Belum ada isi cerita. Kembali ke Tulis untuk menambahkan konten.'}</p>
@@ -476,7 +476,7 @@ export const LandingView: React.FC = () => {
       <footer className="kd-site-footer">
         <div className="kd-site-footer-main">
           <div className="kd-site-footer-identity">
-            <a href="/" className="kd-brand" aria-label="Kedata CMS beranda"><KedataMark className="h-8 w-8" /><span>Kedata CMS</span></a>
+            <a href="/" className="kd-brand" aria-label="Kedata CMS beranda"><KedataWordmark /></a>
             <p>Konten terpusat.<br />Website tetap milik Anda.</p>
           </div>
           <nav aria-label="Tautan footer" className="kd-site-footer-links">

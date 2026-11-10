@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npx prisma generate --schema hosting/vercel/schema.prisma && node scripts/export-openapi.mjs && npm run build",
+  "crons": [
+    {
+      "path": "/api/cron/publish",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "rewrites": [
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/rss.xml", "destination": "/api/rss.xml" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "/api/robots.txt" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

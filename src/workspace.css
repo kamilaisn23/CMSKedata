@@ -67,3 +67,58 @@
   .cms-settings-page > form > div { grid-template-columns:minmax(0,1fr); gap:16px; padding:24px 0; }
   .cms-settings-page > form > div > div { padding:16px; }
 }
+
+/* Unified [K]edata CMS wordmark lockup */
+.cms-wordmark {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0;
+  line-height: 1;
+  font-size: 21px;
+  white-space: nowrap;
+  user-select: none;
+}
+.cms-wordmark-k {
+  display: inline-block;
+  height: 0.96em;
+  width: 1.05em;
+  flex-shrink: 0;
+  transform: translateY(0.03em);
+}
+.dark .cms-wordmark-k {
+  filter: brightness(1.45);
+}
+.cms-wordmark-text {
+  display: inline-flex;
+  align-items: baseline;
+  margin-left: -0.04em;
+}
+.cms-wordmark-edata {
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: #293B48;
+}
+.dark .cms-wordmark-edata {
+  color: #EEF0F2;
+}
+.cms-wordmark-suffix {
+  margin-left: 0.28em;
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #6C7A89;
+}
+.dark .cms-wordmark-suffix {
+  color: #9AA8B6;
+}
+@media(max-width:640px) {
+  .cms-navbar .cms-logo-toggle .cms-wordmark-text { display: none; }
+}
+
+/* Editorial status badges (including IN_REVIEW and dark mode variants) */
+.cms-status { font-weight: 500; }
+.cms-status-in_review { background: #e8eff7; color: #2b547e; }
+.dark .cms-status-published { background: #1f3329; color: #93c9a8; }
+.dark .cms-status-scheduled { background: #3a2f1a; color: #e2c27f; }
+.dark .cms-status-in_review { background: #1e2f42; color: #9cc2e6; }

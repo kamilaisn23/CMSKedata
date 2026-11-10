@@ -2,8 +2,10 @@ import express, { Request, Response } from 'express';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { accessOpenapiSpec } from './access-openapi.js';
 
 export const openapiRouter = express.Router();
+openapiRouter.get('/admin-openapi.json', (_req, res) => res.json(accessOpenapiSpec));
 const require = createRequire(import.meta.url);
 const swaggerAssets = path.dirname(require.resolve('swagger-ui-dist/package.json'));
 
@@ -450,7 +452,7 @@ openapiRouter.get('/docs', (_req: Request, res: Response) => {
 <body>
   <a class="skip-link" href="#overview">Lewati navigasi</a>
   <header class="docs-header">
-    <a href="/" class="docs-brand" aria-label="Kedata CMS beranda"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path fill="#a5b4b0" d="M3 3h7v26H3z"/><path fill="#6c7a89" d="M13 3h8L13 15l15 14H18L7 17z"/></svg><span>Kedata CMS</span><span class="docs-header-label">Dokumentasi</span></a>
+    <a href="/" class="docs-brand" aria-label="Kedata CMS beranda"><span class="docs-wordmark" aria-hidden="true"><svg width="23" height="21" viewBox="12 10 48 44" fill="none" class="docs-wordmark-k"><path d="M12 10h12v44H12z" fill="#445867"/><path d="M28 30 45 10h15L41 32l19 22H45L28 34v-4Z" fill="#6C7A89"/><path d="M12 10h12v12H12z" fill="#A6B8B0"/></svg><span class="docs-wordmark-text"><span class="docs-wordmark-edata">edata</span><span class="docs-wordmark-suffix">CMS</span></span></span><span class="docs-header-label">Dokumentasi</span></a>
     <nav aria-label="Navigasi utama"><a href="/">Beranda</a><a class="header-action" href="/login">Buka workspace <span aria-hidden="true">&nearr;</span></a></nav>
   </header>
   <div class="docs-layout">

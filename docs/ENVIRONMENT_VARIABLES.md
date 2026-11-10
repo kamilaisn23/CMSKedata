@@ -1,5 +1,7 @@
 # Environment Variables: Kedata CMS (rekonstruksi)
 
+> Konfigurasi varian InfinityFree v1.0 (2026-11-10) memakai `hosting/infinityfree/htdocs/cms-private/config.php`, bukan .env Node: `db_host`, `db_name`, `db_user`, `db_password` (rahasia), `app_url`, `secure_cookies`, `setup_token` (rahasia, hanya instalasi kosong). Contoh tanpa kredensial: config.example.php. `db_port` opsional untuk uji lokal. Jangan upload .env atau SQL data. Lihat [INFINITYFREE.md](INFINITYFREE.md).
+
 **Status:** Reconstructed — menunggu konfirmasi manusia  
 **Versi:** 0.1 · **Tanggal:** 2026-11-06  
 Nilai aktual tidak disalin. Tabel memisahkan variabel yang benar-benar dibaca kode dari yang hanya tercantum di contoh konfigurasi/dokumentasi.

@@ -484,6 +484,20 @@ export const SitesView: React.FC<{
                   className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="cms-sitesview-7b" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  Webhook Secret HMAC-SHA256 (Opsional)
+                </label>
+                <input id="cms-sitesview-7b"
+                  type="password"
+                  autoComplete="new-password"
+                  value={webhookSecret}
+                  onChange={(e) => setWebhookSecret(e.target.value)}
+                  placeholder="whsec_..."
+                  className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                />
+              </div>
             </div>
 
             <div className="flex justify-end gap-2 border-t pt-3 border-slate-200 dark:border-slate-800">
@@ -593,6 +607,20 @@ export const SitesView: React.FC<{
                   value={webhookUrl}
                   onChange={(e) => setWebhookUrl(e.target.value)}
                   placeholder="https://..."
+                  className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="cms-sitesview-14" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  Webhook Secret Baru (Kosongkan jika tidak diubah)
+                </label>
+                <input id="cms-sitesview-14"
+                  type="password"
+                  autoComplete="new-password"
+                  value={webhookSecret}
+                  onChange={(e) => setWebhookSecret(e.target.value)}
+                  placeholder="whsec_..."
                   className="w-full px-3 py-2 text-[13px] font-mono bg-slate-50 dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] rounded-lg text-slate-900 dark:text-slate-100"
                 />
               </div>

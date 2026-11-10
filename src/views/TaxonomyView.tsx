@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Folder, Tag as TagIcon, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Folder, Tag as TagIcon, X } from 'lucide-react';
 import { Site } from '../components/Navbar';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { useToast } from '../components/Toast';
@@ -25,14 +25,16 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
   const [tags, setTags] = useState<TagItem[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // New Category state
+  // Category modal state
   const [catModalOpen, setCatModalOpen] = useState(false);
+  const [editingCatId, setEditingCatId] = useState<string | null>(null);
   const [catName, setCatName] = useState('');
   const [catSlug, setCatSlug] = useState('');
   const [catDesc, setCatDesc] = useState('');
 
-  // New Tag state
+  // Tag modal state
   const [tagModalOpen, setTagModalOpen] = useState(false);
+  const [editingTagId, setEditingTagId] = useState<string | null>(null);
   const [tagName, setTagName] = useState('');
   const [tagSlug, setTagSlug] = useState('');
 
@@ -69,16 +71,20 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
     e.preventDefault();
     if (!activeSite) return;
     try {
-      const res = await fetch(`/api/admin/categories?siteId=${activeSite.id}`, {
-        method: 'POST',
+      const url = editingCatId
+        ? `/api/admin/categories/${editingCatId}`
+        : `/api/admin/categories?siteId=${activeSite.id}`;
+      const res = await fetch(url, {
+        method: editingCatId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: catName, slug: catSlug, description: catDesc }),
       });
       const json = await res.json();
-      if (json.error) throw new Error(json.error.message);
+      if (!res.ok || json.error) throw new Error(json.error?.message || 'Gagal menyimpan kategori');
 
-      showToast('Kategori berhasil dibuat', 'success');
+      showToast(editingCatId ? 'Kategori berhasil diperbarui' : 'Kategori berhasil dibuat', 'success');
       setCatModalOpen(false);
+      setEditingCatId(null);
       setCatName('');
       setCatSlug('');
       setCatDesc('');
@@ -92,16 +98,20 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
     e.preventDefault();
     if (!activeSite) return;
     try {
-      const res = await fetch(`/api/admin/tags?siteId=${activeSite.id}`, {
-        method: 'POST',
+      const url = editingTagId
+        ? `/api/admin/tags/${editingTagId}`
+        : `/api/admin/tags?siteId=${activeSite.id}`;
+      const res = await fetch(url, {
+        method: editingTagId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: tagName, slug: tagSlug }),
       });
       const json = await res.json();
-      if (json.error) throw new Error(json.error.message);
+      if (!res.ok || json.error) throw new Error(json.error?.message || 'Gagal menyimpan tag');
 
-      showToast('Tag berhasil dibuat', 'success');
+      showToast(editingTagId ? 'Tag berhasil diperbarui' : 'Tag berhasil dibuat', 'success');
       setTagModalOpen(false);
+      setEditingTagId(null);
       setTagName('');
       setTagSlug('');
       loadTaxonomies();
@@ -145,7 +155,13 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
         <div className="flex items-center gap-2">
           {tab === 'categories' ? (
             <button
-              onClick={() => setCatModalOpen(true)}
+              onClick={() => {
+                setEditingCatId(null);
+                setCatName('');
+                setCatSlug('');
+                setCatDesc('');
+                setCatModalOpen(true);
+              }}
               className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer"
             >
               <Plus className="w-4 h-4" />
@@ -153,7 +169,12 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
             </button>
           ) : (
             <button
-              onClick={() => setTagModalOpen(true)}
+              onClick={() => {
+                setEditingTagId(null);
+                setTagName('');
+                setTagSlug('');
+                setTagModalOpen(true);
+              }}
               className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold text-white bg-[#242a31] hover:bg-[#3a424c] rounded-lg transition  cursor-pointer"
             >
               <Plus className="w-4 h-4" />
@@ -212,13 +233,30 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
 
               <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[13px] text-slate-500">
                 <span>{c._count?.posts || 0} artikel terkait</span>
-                <button
-                  onClick={() => setDeleteTarget({ id: c.id, name: c.name, type: 'cat' })}
-                  className="p-1 text-slate-500 hover:text-rose-600 rounded transition"
-                  title="Hapus Kategori"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      setEditingCatId(c.id);
+                      setCatName(c.name);
+                      setCatSlug(c.slug);
+                      setCatDesc(c.description || '');
+                      setCatModalOpen(true);
+                    }}
+                    className="inline-flex items-center justify-center min-w-8 min-h-8 p-1.5 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded transition"
+                    title="Sunting Kategori"
+                    aria-label={`Sunting kategori ${c.name}`}
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setDeleteTarget({ id: c.id, name: c.name, type: 'cat' })}
+                    className="inline-flex items-center justify-center min-w-8 min-h-8 p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded transition"
+                    title="Hapus Kategori"
+                    aria-label={`Hapus kategori ${c.name}`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -231,13 +269,28 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
           {tags.map((t) => (
             <div
               key={t.id}
-              className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#282E35] text-[13px] font-medium text-slate-700 dark:text-slate-200"
+              className="flex items-center gap-2 pl-3 pr-1.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#282E35] text-[13px] font-medium text-slate-700 dark:text-slate-200"
             >
               <span>#{t.name}</span>
               <span className="text-[13px] text-slate-500 font-mono">({t._count?.posts || 0})</span>
               <button
+                onClick={() => {
+                  setEditingTagId(t.id);
+                  setTagName(t.name);
+                  setTagSlug(t.slug);
+                  setTagModalOpen(true);
+                }}
+                className="inline-flex items-center justify-center min-w-7 min-h-7 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-200/60 dark:hover:bg-slate-700 rounded p-1 transition"
+                title="Sunting Tag"
+                aria-label={`Sunting tag ${t.name}`}
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+              </button>
+              <button
                 onClick={() => setDeleteTarget({ id: t.id, name: t.name, type: 'tag' })}
-                className="text-slate-500 hover:text-rose-600 p-0.5"
+                className="inline-flex items-center justify-center min-w-7 min-h-7 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded p-1 transition"
+                title="Hapus Tag"
+                aria-label={`Hapus tag ${t.name}`}
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -246,7 +299,7 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
         </div>
       )}
 
-      {/* Category Create Modal */}
+      {/* Category Create/Edit Modal */}
       {catModalOpen && (
         <div className="fixed inset-0 z-80 flex items-center justify-center p-4 bg-black/50">
           <form
@@ -254,7 +307,9 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
             className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in"
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">Tambah Kategori Baru</h3>
+              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">
+                {editingCatId ? 'Sunting Kategori' : 'Tambah Kategori Baru'}
+              </h3>
               <button type="button" onClick={() => setCatModalOpen(false)}>
                 <X className="w-5 h-5 text-slate-500" />
               </button>
@@ -331,7 +386,9 @@ export const TaxonomyView: React.FC<{ activeSite: Site | null }> = ({ activeSite
             className="bg-white dark:bg-[#1E2328] border border-slate-200 dark:border-[#3E4651] rounded-lg max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in"
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">Tambah Tag Baru</h3>
+              <h3 className="font-medium text-base text-slate-800 dark:text-slate-100">
+                {editingTagId ? 'Sunting Tag' : 'Tambah Tag Baru'}
+              </h3>
               <button type="button" onClick={() => setTagModalOpen(false)}>
                 <X className="w-5 h-5 text-slate-500" />
               </button>

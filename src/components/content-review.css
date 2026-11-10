@@ -1,0 +1,22 @@
+.kd-review-trigger { min-height:44px; padding:6px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; white-space:nowrap; }
+.kd-review-dialog { white-space:normal; }
+.kd-review-dialog label,.kd-review-dialog textarea { display:block; max-width:100%; box-sizing:border-box; }
+.kd-review-dialog { width:min(720px,calc(100vw - 32px)); max-height:calc(100dvh - 32px); margin:auto; padding:24px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; color:#1e293b; text-align:left; overflow:auto; font-size:14px; line-height:1.6; }
+.kd-review-dialog::backdrop { background:rgb(15 23 42 / .5); }
+.kd-review-dialog header,.kd-review-dialog footer { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.kd-review-dialog h2 { font-size:20px; font-weight:600; overflow-wrap:anywhere; }
+.kd-review-dialog h3 { margin-top:20px; font-weight:600; }
+.kd-review-dialog p,.kd-review-dialog li { margin-block:8px; overflow-wrap:anywhere; }
+.kd-review-preview { padding:16px 0; max-width:100%; border-block:1px solid #e2e8f0; margin-top:16px; overflow-wrap:anywhere; }
+.kd-review-preview img { max-width:100%; }
+.kd-review-dialog textarea { width:100%; min-height:90px; padding:10px; border:1px solid #94a3b8; border-radius:6px; background:transparent; }
+.kd-review-dialog footer { justify-content:flex-start; margin-top:20px; }
+.kd-review-dialog button { min-height:44px; padding:8px 12px; border:1px solid #94a3b8; border-radius:6px; cursor:pointer; }
+.kd-review-dialog footer button:first-child { background:#4f5a66; color:white; border-color:#4f5a66; }
+.kd-review-dialog button:disabled { opacity:.5; cursor:wait; }
+.kd-review-dialog :is(button,textarea):focus-visible,.kd-review-trigger:focus-visible { outline:2px solid #6c7a89; outline-offset:3px; }
+.kd-review-error { color:#be123c; }
+.dark .kd-review-dialog { background:#1e2328; color:#e2e8f0; border-color:#53616e; }
+.dark .kd-review-preview,.dark .kd-review-trigger { border-color:#53616e; }
+.dark .kd-review-error { color:#fda4af; }
+@media(max-width:480px) { .kd-review-dialog { padding:16px; } }

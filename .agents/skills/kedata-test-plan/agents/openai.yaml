@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Test Plan"
+  short_description: "Turn PRD acceptance criteria + edge cases + contracts into a traceable TEST_PLAN.md — cases, fixtures, environments, exit criteria."

@@ -1,0 +1,9 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+RewriteEngine On
+RewriteRule ^cms-private(?:/|$) - [F,L,NC]
+RewriteRule ^(?:\.env|\.git|.*\.(?:sqlite|db|sql|log|bak))$ - [F,L,NC]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^ index.php [QSA,L]

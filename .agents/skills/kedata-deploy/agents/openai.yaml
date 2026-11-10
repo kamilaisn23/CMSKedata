@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Deploy"
+  short_description: "Turn the plan's platform decision into deploy artifacts + DEPLOYMENT.md — Dockerfile, compose/Cloud Run, CI/CD, secrets, migrations, rollout/rollback."

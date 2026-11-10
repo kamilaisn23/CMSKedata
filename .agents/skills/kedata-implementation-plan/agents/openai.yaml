@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Implementation Plan"
+  short_description: "Product-to-engineering handoff: locks architecture (monolith vs split), task breakdown, dependency order, definition of done."

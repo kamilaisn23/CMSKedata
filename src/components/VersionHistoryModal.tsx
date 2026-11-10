@@ -18,6 +18,7 @@ interface VersionHistoryModalProps {
   entityId: string;
   onClose: () => void;
   onRestored: () => void;
+  canRestore?: boolean;
 }
 
 export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
@@ -26,6 +27,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
   entityId,
   onClose,
   onRestored,
+  canRestore = true,
 }) => {
   const [versions, setVersions] = useState<VersionItem[]>([]);
   const [selectedVersion, setSelectedVersion] = useState<VersionItem | null>(null);
@@ -159,7 +161,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
                   </div>
                   <button
                     onClick={() => handleRestore(selectedVersion)}
-                    disabled={restoring}
+                    disabled={restoring || !canRestore}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#6C7A89] hover:bg-[#5a6775] rounded-md transition shadow-xs disabled:opacity-50"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />

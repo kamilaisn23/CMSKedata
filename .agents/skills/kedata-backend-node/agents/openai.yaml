@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kedata Backend Node"
+  short_description: "Kedata backend standards for Node + Express: swagger-jsdoc, activity log, zod, Jest/Vitest."

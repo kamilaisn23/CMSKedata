@@ -1,0 +1,970 @@
+{
+  "User": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "email",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "passwordHash",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "role",
+      "type": "String",
+      "required": true,
+      "default": "ADMIN",
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "SiteMembership": [
+    {
+      "name": "userId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    }
+  ],
+  "Session": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "token",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "userId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "expiresAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    }
+  ],
+  "Site": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "slug",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "domain",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "description",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "apiKeyHash",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "apiKeyPrefix",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "corsOrigins",
+      "type": "String",
+      "required": true,
+      "default": "*",
+      "updated": false
+    },
+    {
+      "name": "webhookUrl",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "webhookSecret",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "rateLimit",
+      "type": "Int",
+      "required": true,
+      "default": 120,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "SiteSetting": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "siteTitle",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "tagline",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "logoUrl",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "faviconUrl",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "contactEmail",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "contactPhone",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "socialLinks",
+      "type": "String",
+      "required": true,
+      "default": "{}",
+      "updated": false
+    },
+    {
+      "name": "footerText",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "customMetadata",
+      "type": "String",
+      "required": true,
+      "default": "{}",
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "Category": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "slug",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "description",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "Tag": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "slug",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "Page": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "title",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "slug",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "contentHtml",
+      "type": "String",
+      "required": true,
+      "default": "",
+      "updated": false
+    },
+    {
+      "name": "contentJson",
+      "type": "String",
+      "required": true,
+      "default": "{}",
+      "updated": false
+    },
+    {
+      "name": "status",
+      "type": "String",
+      "required": true,
+      "default": "DRAFT",
+      "updated": false
+    },
+    {
+      "name": "metaTitle",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "metaDescription",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "ogImage",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "publishedAt",
+      "type": "DateTime",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "Post": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "title",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "slug",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "excerpt",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "contentHtml",
+      "type": "String",
+      "required": true,
+      "default": "",
+      "updated": false
+    },
+    {
+      "name": "contentJson",
+      "type": "String",
+      "required": true,
+      "default": "{}",
+      "updated": false
+    },
+    {
+      "name": "featuredImage",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "status",
+      "type": "String",
+      "required": true,
+      "default": "DRAFT",
+      "updated": false
+    },
+    {
+      "name": "categoryId",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "publishedAt",
+      "type": "DateTime",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "scheduledAt",
+      "type": "DateTime",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "metaTitle",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "metaDescription",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "ogImage",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "PostTag": [
+    {
+      "name": "postId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "tagId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    }
+  ],
+  "ContentVersion": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "entityType",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "entityId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "versionNumber",
+      "type": "Int",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "title",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "contentHtml",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "contentJson",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "snapshotData",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdBy",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    }
+  ],
+  "Media": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "filename",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "originalName",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "mimeType",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "sizeBytes",
+      "type": "Int",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "url",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "altText",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "caption",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "Menu": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "location",
+      "type": "String",
+      "required": true,
+      "default": "HEADER",
+      "updated": false
+    },
+    {
+      "name": "itemsJson",
+      "type": "String",
+      "required": true,
+      "default": "[]",
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    },
+    {
+      "name": "updatedAt",
+      "type": "DateTime",
+      "required": true,
+      "default": null,
+      "updated": true
+    }
+  ],
+  "AuditLog": [
+    {
+      "name": "id",
+      "type": "String",
+      "required": true,
+      "default": {
+        "name": "cuid",
+        "args": [
+          1
+        ]
+      },
+      "updated": false
+    },
+    {
+      "name": "siteId",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "actor",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "action",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "entityType",
+      "type": "String",
+      "required": true,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "entityId",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "details",
+      "type": "String",
+      "required": true,
+      "default": "{}",
+      "updated": false
+    },
+    {
+      "name": "ipAddress",
+      "type": "String",
+      "required": false,
+      "default": null,
+      "updated": false
+    },
+    {
+      "name": "createdAt",
+      "type": "DateTime",
+      "required": true,
+      "default": {
+        "name": "now",
+        "args": []
+      },
+      "updated": false
+    }
+  ]
+}

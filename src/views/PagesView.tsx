@@ -16,6 +16,12 @@ import { TipTapEditor } from '../components/TipTapEditor';
 import { VersionHistoryModal } from '../components/VersionHistoryModal';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { useToast } from '../components/Toast';
+import { canEditContent, canPublish } from '../lib/access';
+import { PageDraftSchema, draftKey } from '../lib/editorDrafts';
+import { useEditorDraft } from '../hooks/useEditorDraft';
+import { EditorDraftNotice } from '../components/EditorDraftNotice';
+import { ContentReview } from '../components/ContentReview';
+import { MediaPickerModal } from '../components/MediaPickerModal';
 
 interface PageItem {
   id: string;
@@ -24,7 +30,7 @@ interface PageItem {
   slug: string;
   contentHtml: string;
   contentJson: string;
-  status: 'DRAFT' | 'PUBLISHED';
+  status: 'DRAFT' | 'PUBLISHED' | 'IN_REVIEW';
   metaTitle?: string;
   metaDescription?: string;
   ogImage?: string;
@@ -35,9 +41,13 @@ interface PageItem {
 
 interface PagesViewProps {
   activeSite: Site | null;
+  role: string;
+  userId: string;
+  initialEditId?: string | null;
+  onClearInitialEdit?: () => void;
 }
 
-export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
+export const PagesView: React.FC<PagesViewProps> = ({ activeSite, role, userId, initialEditId, onClearInitialEdit }) => {
   const [pages, setPages] = useState<PageItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -59,14 +69,39 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
   // Modals
   const [deleteTarget, setDeleteTarget] = useState<PageItem | null>(null);
   const [versionTarget, setVersionTarget] = useState<PageItem | null>(null);
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
 
   const { showToast } = useToast();
+  const baseUpdatedAt = pages.find(page => page.id === currentId)?.updatedAt || null;
+  const draft = useEditorDraft({
+    storageKey: draftKey(userId, activeSite?.id || '', 'PAGE', currentId), enabled: isEditing && !!activeSite,
+    baseUpdatedAt, schema: PageDraftSchema,
+    data: { title, slug, contentHtml, contentJson, status, metaTitle, metaDescription, ogImage },
+  });
+  const restoreDraft = () => {
+    const value = draft.restore();
+    if (!value) return;
+    setTitle(value.title); setSlug(value.slug); setContentHtml(value.contentHtml); setContentJson(value.contentJson);
+    setStatus(canPublish(role) ? value.status : 'DRAFT');
+    setMetaTitle(value.metaTitle); setMetaDescription(value.metaDescription); setOgImage(value.ogImage);
+  };
 
   useEffect(() => {
     if (activeSite) {
       loadPages();
     }
   }, [activeSite]);
+
+  useEffect(() => {
+    if (!initialEditId || pages.length === 0) return;
+    const matched = pages.find((p) => p.id === initialEditId);
+    if (matched) {
+      if (canEditContent(role, matched.status)) {
+        handleOpenEdit(matched);
+      }
+      onClearInitialEdit?.();
+    }
+  }, [initialEditId, pages]);
 
   const loadPages = async () => {
     if (!activeSite) return;
@@ -96,6 +131,7 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
   };
 
   const handleOpenEdit = (p: PageItem) => {
+    if (p.status === 'IN_REVIEW') return;
     setCurrentId(p.id);
     setTitle(p.title);
     setSlug(p.slug);
@@ -115,6 +151,15 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-');
   };
+
+  useEffect(() => {
+    if (!initialEditId || loading) return;
+    const page = pages.find(item => item.id === initialEditId && item.siteId === activeSite?.id);
+    if (!page) return;
+    if (canEditContent(role, page.status)) handleOpenEdit(page);
+    else showToast('Halaman ini tidak dapat disunting dengan peran atau status sekarang', 'info');
+    onClearInitialEdit?.();
+  }, [initialEditId, pages, loading, activeSite?.id, role]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,6 +199,7 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
       }
 
       showToast(currentId ? 'Halaman berhasil diperbarui' : 'Halaman berhasil dibuat', 'success');
+      draft.savedToServer();
       setIsEditing(false);
       loadPages();
     } catch (err: any) {
@@ -231,6 +277,7 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
             >
               <option value="ALL">Semua Status</option>
               <option value="PUBLISHED">Published</option>
+              <option value="IN_REVIEW">Menunggu review</option>
               <option value="DRAFT">Draft</option>
             </select>
           </div>
@@ -278,10 +325,12 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                             className={`px-2 py-0.5 rounded-full text-[13px] font-medium ${
                               page.status === 'PUBLISHED'
                                 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500'
+                                : page.status === 'IN_REVIEW'
+                                ? 'bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300'
+                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
                             }`}
                           >
-                            {page.status}
+                            {page.status === 'IN_REVIEW' ? 'Menunggu review' : page.status}
                           </span>
                         </td>
                         <td className="p-3.5 text-slate-500">
@@ -289,24 +338,30 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                         </td>
                         <td className="p-3.5 text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            <ContentReview kind="pages" content={page} role={role} onChanged={loadPages} />
                             <button
                               onClick={() => setVersionTarget(page)}
-                              className="p-1.5 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
+                              className="inline-flex items-center justify-center min-w-8 min-h-8 p-2 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
                               title="Riwayat Versi & Snapshot"
+                              aria-label={`Riwayat versi ${page.title}`}
                             >
                               <History className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleOpenEdit(page)}
-                              className="p-1.5 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
+                              disabled={!canEditContent(role, page.status)}
+                              className="inline-flex items-center justify-center min-w-8 min-h-8 p-2 text-slate-500 hover:text-[#6C7A89] hover:bg-slate-100 dark:hover:bg-[#282E35] rounded-md transition"
                               title="Sunting Halaman"
+                              aria-label={`Sunting halaman ${page.title}`}
                             >
                               <Edit className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => setDeleteTarget(page)}
-                              className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
+                              disabled={!canEditContent(role, page.status)}
+                              className="inline-flex items-center justify-center min-w-8 min-h-8 p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md transition"
                               title="Hapus Halaman"
+                              aria-label={`Hapus halaman ${page.title}`}
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -322,6 +377,8 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
       ) : (
         /* Page Form Editor */
         <form onSubmit={handleSave} className="flex flex-col gap-6">
+          <EditorDraftNotice {...draft} baseUpdatedAt={baseUpdatedAt} onRestore={restoreDraft} onDiscard={draft.discard} />
+          <div inert={!!draft.recovery || saving} className="flex min-w-0 flex-col gap-6">
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -339,7 +396,7 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                 className="text-[13px] font-medium bg-white dark:bg-[#282E35] border border-slate-300 dark:border-[#3E4651] text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2 focus:outline-hidden"
               >
                 <option value="DRAFT">Draft</option>
-                <option value="PUBLISHED">Published</option>
+                {canPublish(role) && <option value="PUBLISHED">Published</option>}
               </select>
 
               <button
@@ -441,9 +498,18 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="cms-pagesview-4" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500 mb-1">
-                    Gambar OpenGraph (OG Image URL)
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label htmlFor="cms-pagesview-4" className="block text-[13px] font-semibold text-slate-600 dark:text-slate-500">
+                      Gambar OpenGraph (OG Image URL)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setMediaPickerOpen(true)}
+                      className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#6C7A89] hover:text-[#4F5A66] dark:text-[#8E9BA9] cursor-pointer"
+                    >
+                      <span>Pilih dari Media</span>
+                    </button>
+                  </div>
                   <input id="cms-pagesview-4"
                     type="text"
                     value={ogImage}
@@ -462,12 +528,22 @@ export const PagesView: React.FC<PagesViewProps> = ({ activeSite }) => {
               </div>
             </div>
           </div>
+          </div>
         </form>
       )}
 
       {/* Version History Modal */}
+      <MediaPickerModal
+        isOpen={mediaPickerOpen}
+        siteId={activeSite?.id}
+        currentUrl={ogImage}
+        onSelect={(url) => setOgImage(url)}
+        onClose={() => setMediaPickerOpen(false)}
+      />
+
       {versionTarget && (
         <VersionHistoryModal
+          canRestore={canEditContent(role, versionTarget.status)}
           isOpen={!!versionTarget}
           entityType="PAGE"
           entityId={versionTarget.id}

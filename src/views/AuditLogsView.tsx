@@ -22,7 +22,7 @@ export const AuditLogsView: React.FC<{ activeSite: Site | null }> = ({ activeSit
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [filterAction, setFilterAction] = useState('ALL');
-  const [scopeSiteOnly, setScopeSiteOnly] = useState(false);
+  const [scopeSiteOnly, setScopeSiteOnly] = useState(true);
   const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
 
   const { showToast } = useToast();
