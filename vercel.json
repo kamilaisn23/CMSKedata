@@ -8,10 +8,11 @@
     }
   ],
   "rewrites": [
-    { "source": "/health", "destination": "/api/health" },
-    { "source": "/rss.xml", "destination": "/api/rss.xml" },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/api/robots.txt" },
+    { "source": "/api/:path*", "destination": "/api/index" },
+    { "source": "/health", "destination": "/api/index" },
+    { "source": "/rss.xml", "destination": "/api/index" },
+    { "source": "/sitemap.xml", "destination": "/api/index" },
+    { "source": "/robots.txt", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

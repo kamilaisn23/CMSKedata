@@ -32,7 +32,7 @@ test('vercel serverless app serves API routes with isolated SQLite fixture', asy
 
   try {
     await t.test('health responds for the vercel.json rewrite target', async () => {
-      const response = await fetch(base + '/api/health');
+      const response = await fetch(base + '/health');
       assert.equal(response.status, 200);
       const body = await response.json();
       assert.equal(body.status, 'healthy');
@@ -40,7 +40,7 @@ test('vercel serverless app serves API routes with isolated SQLite fixture', asy
     });
 
     await t.test('public feeds work without an API key at both mount paths', async () => {
-      for (const route of ['/api/rss.xml', '/api/v1/rss.xml', '/api/sitemap.xml', '/api/v1/sitemap.xml', '/api/robots.txt']) {
+      for (const route of ['/rss.xml', '/sitemap.xml', '/robots.txt', '/api/rss.xml', '/api/v1/rss.xml', '/api/sitemap.xml', '/api/v1/sitemap.xml', '/api/robots.txt']) {
         const response = await fetch(base + route);
         assert.equal(response.status, 200, route);
         assert.match(response.headers.get('content-type') || '', /xml|text/);

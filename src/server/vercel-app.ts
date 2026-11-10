@@ -5,7 +5,7 @@ import { v1Router } from './api/v1.js';
 import { adminRouter } from './api/admin.js';
 import { feedsRouter } from './feeds.js';
 
-// Express app for the Vercel serverless variant (api/[[...path]].ts).
+// Express app for the Vercel serverless variant (api/index.ts).
 // Static files (dist/, public/) and docs are served by Vercel directly,
 // so this app only carries the API routes. All frontend fetches use
 // same-origin /api/... paths, so session cookies work without CORS setup.
@@ -15,7 +15,7 @@ vercelApp.use(express.json({ limit: '10mb' }));
 vercelApp.use(express.urlencoded({ extended: true, limit: '10mb' }));
 vercelApp.use(cookieParser());
 
-vercelApp.get('/api/health', (_req, res) => {
+vercelApp.get(['/health', '/api/health'], (_req, res) => {
   res.json({ status: 'healthy', timestamp: new Date().toISOString(), backend: 'vercel-serverless' });
 });
 
@@ -25,6 +25,7 @@ vercelApp.use('/api/v1', feedsRouter);
 vercelApp.use('/api', feedsRouter);
 vercelApp.use('/api/v1', v1Router);
 vercelApp.use('/api/admin', adminRouter);
+vercelApp.use('/', feedsRouter);
 
 // Vercel Cron target (vercel.json crons.path). Vercel sends GET with an
 // Authorization: Bearer <CRON_SECRET> header when CRON_SECRET is set.

@@ -7,7 +7,7 @@ Tanggal 10 November 2026. Target: hosting gratis di Vercel (Hobby) dengan databa
 | Komponen | Penanganan |
 |---|---|
 | Frontend React | `npm run build` (Vite) — disajikan Vercel dari `dist/` |
-| Backend Express | Satu fungsi serverless catch-all `api/[[...path]].ts` yang memasang `src/server/vercel-app.ts` (router `api/v1`, `api/admin`, feeds sama dengan aplikasi utama) |
+| Backend Express | Satu fungsi serverless catch-all `api/index.ts` yang memasang `src/server/vercel-app.ts` (router `api/v1`, `api/admin`, feeds sama dengan aplikasi utama) |
 | Database | Neon PostgreSQL — schema `hosting/vercel/schema.prisma` (model identik, provider postgresql) |
 | Upload media | Vercel Blob (`@vercel/blob`), batas 4 MB per file di varian ini (batas body serverless) |
 | Backup ZIP | Dinonaktifkan di Vercel (balas 503 dengan pesan) — filesystem read-only; pakai ekspor Neon |
@@ -18,7 +18,7 @@ Perubahan pada aplikasi utama bersifat kondisional lewat `process.env.VERCEL` (h
 
 ## File varian
 
-- `api/[[...path]].ts` — entry fungsi serverless
+- `api/index.ts` — entry fungsi serverless
 - `src/server/vercel-app.ts` — Express app untuk serverless + endpoint cron
 - `vercel.json` — build command (`prisma generate` postgres + export OpenAPI + `vite build`), rewrites `/health`, `/rss.xml`, `/sitemap.xml`, `/robots.txt`, SPA fallback, cron
 - `hosting/vercel/schema.prisma` — schema PostgreSQL (+ generator `clientMigrate` terpisah untuk skrip)
@@ -30,7 +30,7 @@ Perubahan pada aplikasi utama bersifat kondisional lewat `process.env.VERCEL` (h
 
 ### 1. Dorong kode ke GitHub
 
-Vercel menarik kode dari Git; tidak ada file yang di-upload manual. Pastikan seluruh perubahan sudah ter-commit dan ter-push ke `najwaadani/CMS` (branch `main`). Jangan commit `.env`, `public/openapi.json` (hasil build), atau `hosting/vercel/generated-migrate/` — sudah ada di `.gitignore`.
+Vercel menarik kode dari Git; tidak ada file yang di-upload manual. Pastikan seluruh perubahan sudah ter-commit dan ter-push ke `kamilaisn23/CMSKedata` (branch `main`). Jangan commit `.env`, `public/openapi.json` (hasil build), atau `hosting/vercel/generated-migrate/` — sudah ada di `.gitignore`.
 
 ### 2. Buat database Neon
 
@@ -52,7 +52,7 @@ Skrip ini membuat tabel di Neon, lalu menyalin Site, User (termasuk password has
 
 ### 5. Import project di Vercel
 
-1. vercel.com → **Add New... Project** → import repo `najwaadani/CMS`.
+1. vercel.com → **Add New... Project** → import repo `kamilaisn23/CMSKedata`.
 2. Di field **Project Name**, isi `cms` (jangan biarkan default nama repo) — nama project menentukan URL produksi, mis. `cms-<nama-akun>.vercel.app`. Kalau project sudah ter-import dengan nama lain: **Settings → General → Rename Project**.
 3. Framework: Vite (terdeteksi otomatis). Build command dan output sudah diatur `vercel.json` — jangan ditimpa di dashboard.
 4. Environment Variables (Production):
