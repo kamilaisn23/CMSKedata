@@ -30,7 +30,7 @@ Perubahan pada aplikasi utama bersifat kondisional lewat `process.env.VERCEL` (h
 
 ### 1. Dorong kode ke GitHub
 
-Vercel menarik kode dari Git; tidak ada file yang di-upload manual. Pastikan seluruh perubahan sudah ter-commit dan ter-push ke `najwaadani/CSM` (branch `main`). Jangan commit `.env`, `public/openapi.json` (hasil build), atau `hosting/vercel/generated-migrate/` — sudah ada di `.gitignore`.
+Vercel menarik kode dari Git; tidak ada file yang di-upload manual. Pastikan seluruh perubahan sudah ter-commit dan ter-push ke `najwaadani/CMS` (branch `main`). Jangan commit `.env`, `public/openapi.json` (hasil build), atau `hosting/vercel/generated-migrate/` — sudah ada di `.gitignore`.
 
 ### 2. Buat database Neon
 
@@ -52,13 +52,14 @@ Skrip ini membuat tabel di Neon, lalu menyalin Site, User (termasuk password has
 
 ### 5. Import project di Vercel
 
-1. vercel.com → **Add New... Project** → import repo `najwaadani/CSM`.
-2. Framework: Vite (terdeteksi otomatis). Build command dan output sudah diatur `vercel.json` — jangan ditimpa di dashboard.
-3. Environment Variables (Production):
+1. vercel.com → **Add New... Project** → import repo `najwaadani/CMS`.
+2. Di field **Project Name**, isi `cms` (jangan biarkan default nama repo) — nama project menentukan URL produksi, mis. `cms-<nama-akun>.vercel.app`. Kalau project sudah ter-import dengan nama lain: **Settings → General → Rename Project**.
+3. Framework: Vite (terdeteksi otomatis). Build command dan output sudah diatur `vercel.json` — jangan ditimpa di dashboard.
+4. Environment Variables (Production):
    - `DATABASE_URL` = connection string Neon (langkah 2)
    - `BLOB_READ_WRITE_TOKEN` = otomatis dari langkah 4 (periksa ada)
    - `CRON_SECRET` (opsional tapi disarankan) = string acak ≥32 karakter; cron memakai header `Authorization: Bearer <CRON_SECRET>`
-4. **Deploy**. Build menjalankan: generate klien Prisma PostgreSQL → export OpenAPI → `vite build`.
+5. **Deploy**. Build menjalankan: generate klien Prisma PostgreSQL → export OpenAPI → `vite build`.
 
 ### 6. Verifikasi pasca-deploy
 
