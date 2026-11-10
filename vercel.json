@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npx prisma generate --schema hosting/vercel/schema.prisma && node scripts/export-openapi.mjs && npm run build",
+  "buildCommand": "node scripts/bundle-sanitizer.mjs && npx prisma generate --schema hosting/vercel/schema.prisma && node scripts/export-openapi.mjs && npm run build",
   "crons": [
     {
       "path": "/api/cron/publish",
