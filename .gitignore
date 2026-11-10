@@ -13,6 +13,8 @@ artifacts/
 hosting/infinityfree/htdocs/cms-private/config.php
 scripts/infinityfree-ftp.json
 hosting/generated-migrate/
+prisma/prisma/dev.db
+prisma/prisma/dev.db-*
 public/openapi.json
 public/admin-openapi.json
 public/docs/assets/
